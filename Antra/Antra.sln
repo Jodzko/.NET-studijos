@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Antra", "Antra\Antra.csproj", "{87392D4E-B800-4F86-B2D5-036A056F7624}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{87392D4E-B800-4F86-B2D5-036A056F7624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87392D4E-B800-4F86-B2D5-036A056F7624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87392D4E-B800-4F86-B2D5-036A056F7624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87392D4E-B800-4F86-B2D5-036A056F7624}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C00A0C24-F56C-4889-B5CE-1DF059B92A7F}
+	EndGlobalSection
+EndGlobal
