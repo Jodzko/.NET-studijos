@@ -1,4 +1,7 @@
-﻿namespace _7_Paskaita_Metodai
+﻿using System.Security.Cryptography.X509Certificates;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace _7_Paskaita_Metodai
 {
     internal class Program
     {
@@ -51,10 +54,13 @@
             //Console.WriteLine("Iveskite skaiciu: ");
             //int n = int.Parse(Console.ReadLine());
             //Recursion(n);
-            //Console.WriteLine("Fibonacci skaiciavimo sistemai pradeti - iveskite 1: ");
-            //int n = int.Parse(Console.ReadLine());
-            //Fibonacci(n);
 
+            Console.WriteLine("Iveskite kelinta skaiciu norite suskaiciuoti: ");
+            int n = int.Parse(Console.ReadLine());
+             n = n - 1;
+            
+            Console.WriteLine(Fibonacci(n));
+            
 
         }
 
@@ -210,17 +216,27 @@
             return number;
 
         }
-        //public static int Fibonacci(int sum, int x, int y)
-        //{
+        public static int Fibonacci(int nthTerm)
+        {
             
-        //    while (sum <= 600)
-        //    {
-
-        //        sum = x + y;
+          
+            if ((nthTerm == 0) || (nthTerm == 1))
+            {
+                return nthTerm;
+            }
+            
+            else
+            {
                 
-        //    }
-        //    Console.WriteLine(number);
-        //    return number;
-        //}
+                return Fibonacci(nthTerm - 1) + Fibonacci(nthTerm - 2);
+                
+            }
+            
+            }
+            
+            
+                
+             
+        }
     }
-}
+
