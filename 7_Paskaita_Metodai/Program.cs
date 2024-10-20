@@ -34,11 +34,12 @@ namespace _7_Paskaita_Metodai
             //double doleriai = double.Parse(Console.ReadLine());
             //ConvertEuros(doleriai);
 
-            //Console.WriteLine("Iveskite varda: ");
-            //string vardas = Console.ReadLine();
-            //Console.WriteLine("Iveskite pavarde: ");
-            //string pavarde = Console.ReadLine();
-            //GetInitials(vardas, pavarde);
+            Console.WriteLine("Iveskite varda:");
+            string vardas = Console.ReadLine();
+            Console.WriteLine("Iveskite pavarde:");
+            string pavarde = Console.ReadLine();
+            string result = GetInitials(vardas, pavarde);
+             Console.WriteLine(result);
 
 
             //Console.WriteLine("Iveskite r: ");
@@ -55,12 +56,12 @@ namespace _7_Paskaita_Metodai
             //int n = int.Parse(Console.ReadLine());
             //Recursion(n);
 
-            Console.WriteLine("Iveskite kelinta skaiciu norite suskaiciuoti: ");
-            int n = int.Parse(Console.ReadLine());
-             n = n - 1;
-            
-            Console.WriteLine(Fibonacci(n));
-            
+            //Console.WriteLine("Iveskite kelinta skaiciu norite suskaiciuoti: ");
+            //int n = int.Parse(Console.ReadLine());
+            // n = n - 1;
+
+            //Console.WriteLine(Fibonacci(n));
+
 
         }
 
@@ -168,12 +169,12 @@ namespace _7_Paskaita_Metodai
             }
             return eurai;
         }
-        private static string GetInitials(string FirstName, string LastName)
+        private static string GetInitials(string firstName, string lastName)
         {
             
-            Console.WriteLine("Jusu vardas: " + FirstName + " Jusu pavarde: "  + LastName);
-            return FirstName;
-            return LastName;
+            
+            return firstName + " " + lastName;
+            
            
         }
         private static double CalculateCylinderVolume(double radius, double height)
