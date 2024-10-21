@@ -22,6 +22,7 @@ namespace Tests
             //Assert
             Assert.AreEqual(expected, actual);
         }
+        [Test]
         public void SumaPatikrinimas()
         {
             int skaicius1 = 5;
@@ -30,6 +31,7 @@ namespace Tests
             double actual = Methods.Suma(skaicius1, skaicius2);
             Assert.AreEqual(expected, actual);
         }
+        [Test]
         public void AtimtisPatikrinimas()
         {
             int skaicius1 = 15;
@@ -38,6 +40,7 @@ namespace Tests
             double actual = Methods.Atimtis(skaicius1, skaicius2);
             Assert.AreEqual(expected, actual);
         }
+        [Test]
         public void DaugybaPatikrinimas()
         {
             int skaicius1 = 5;
@@ -46,6 +49,7 @@ namespace Tests
             double actual = Methods.Daugyba(skaicius1, skaicius2);
             Assert.AreEqual(expected, actual);
         }
+        [Test]
         public void DalybaPatikrinimas()
         {
             int skaicius1 = 10;
@@ -54,6 +58,7 @@ namespace Tests
             double actual = Methods.Dalyba(skaicius1, skaicius2);
             Assert.AreEqual(expected, actual);
         }
+        [Test]
         public void KelimasLaipsniuPatikrinimas()
         {
             int skaicius1 = 5;
@@ -62,6 +67,7 @@ namespace Tests
             double actual = Methods.KelimasLaipsniu(skaicius1, skaicius2);
             Assert.AreEqual(expected, actual);
         }
+        [Test]
         public void SaknisPatikrinimas()
         {
             int skaicius = 16;
