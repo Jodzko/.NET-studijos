@@ -21,7 +21,7 @@ double result = veiksmas switch
     "Sqrt" => result = Methods.Saknis(skaicius1),
     _ => result = 0
 
-};
+};//Cia galima supaprastint iki 2 eiluciu su atskiru metodu GetAndValidateUserInput
 Console.WriteLine(result);
 Methods.Skaiciuotuvas(result, skaicius2);
 
