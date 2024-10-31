@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Metodai\Metodai.csproj" />
+    <ProjectReference Include="..\Methods\Methods.csproj" />
+    <ProjectReference Include="..\Pokemons\Pokemons.csproj" />
   </ItemGroup>
 
 </Project>
