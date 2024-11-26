@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "9_paskaita_OOP_generics_praktika", "9_paskaita_OOP_generics_praktika.csproj", "{74BC9250-B41B-4D06-800E-76B79FD6AD42}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{74BC9250-B41B-4D06-800E-76B79FD6AD42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74BC9250-B41B-4D06-800E-76B79FD6AD42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74BC9250-B41B-4D06-800E-76B79FD6AD42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74BC9250-B41B-4D06-800E-76B79FD6AD42}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EECCECDE-CD51-4E65-AD81-E94BA6485BD1}
+	EndGlobalSection
+EndGlobal

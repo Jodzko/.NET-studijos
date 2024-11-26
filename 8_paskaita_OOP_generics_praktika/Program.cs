@@ -40,6 +40,6 @@ teams.AddTeam(basketBallTeam);
 teams.AddTeam(basketBallTeam2);
 teams.AddTeam(basketBallTeam3);
 teams.ShowBaskteballTeams();
-//teams.ShowFootballTeams();
+teams.ShowFootballTeams();
 
 
