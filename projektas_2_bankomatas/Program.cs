@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace projektas_2_bankomatas
 {
@@ -13,7 +15,6 @@ namespace projektas_2_bankomatas
             //var card3 = new BankCard(123456791, 100000, "Slaptazodis3");
             //var card4 = new BankCard(123456792, 1000000, "Slaptazodis4");
             //var card5 = new BankCard(123456793, 50000, "Slaptazodis5");
-
             //var bank = new Bank();
             //bank.AddCard(card1);
             //bank.AddCard(card2);
@@ -29,6 +30,17 @@ namespace projektas_2_bankomatas
 
             //});
             //writer.Close();
+            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis1"));
+            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis2"));
+            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis3"));
+            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis4"));
+            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis5"));
+            //Hashing.GenerateSalt();
+            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis1"));
+            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis2"));
+            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis3"));
+            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis4"));
+            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis5"));
             var bank = new Bank();
             var reader = File.ReadAllLines(bankFile);
             foreach (var item in reader)
@@ -76,7 +88,7 @@ namespace projektas_2_bankomatas
                 Console.Clear();
                 Console.WriteLine("Enter your password: ");
                 var input = Console.ReadLine();
-                if (input == foundCard.Password)
+                if (Hashing.ToSHA256(input) == foundCard.Password)
                 {
                     correctInput = false;
                     Console.WriteLine("Successfully logged in!");
@@ -97,8 +109,7 @@ namespace projektas_2_bankomatas
                     break;
                 }
             }
-            WriteNewInformation(bank, bankFile);
-
+            WriteNewInformation(bank, bankFile);            
         }
         public static void WriteNewInformation(Bank bank, string path)
         {
