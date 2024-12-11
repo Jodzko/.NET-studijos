@@ -52,8 +52,7 @@ namespace projektas_2_bankomatas
                     if (length == 9)
                     {
                         inputtedCard = input;
-                        inputingCard = false;
-                        Console.WriteLine(input);                        
+                        inputingCard = false;                                              
                     }
                     else
                     {
@@ -61,6 +60,7 @@ namespace projektas_2_bankomatas
                     } 
                 }
             }
+            BankCard currentUser = new BankCard(0, 0, "");
             bank.ListOfCardsInBank.ForEach(x =>
             {
                 if(x.CardNumber == inputtedCard)
@@ -77,6 +77,8 @@ namespace projektas_2_bankomatas
                             correctInput = false;
                             Console.WriteLine("Successfully logged in!");
                             Console.WriteLine($"Account balance: {x.AccountBalance}");
+                            currentUser = x;
+                            Console.ReadLine();
                         }
                         else
                         {
@@ -92,8 +94,26 @@ namespace projektas_2_bankomatas
                     }
                 }
             });
-
+            if (currentUser.CardNumber == 0)
+            {
+                Console.WriteLine($"Didn't find a card with the number {inputtedCard}. You have to go to the bank to add your account.");                
+            }
+            else
+            {
+                BankCardOperations.Instance.Menu(currentUser);
+            }
+            WriteNewInformation(bank, bankFile);
 
         }
+        public static void WriteNewInformation(Bank bank, string path)
+        {
+            var writer = new StreamWriter(path);
+            bank.ListOfCardsInBank.ForEach(x =>
+            {
+                writer.WriteLine($"{x.CardNumber} {x.AccountBalance} {x.Password}");
+            });
+            writer.Close();
+        }
+
     }
 }
