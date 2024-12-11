@@ -61,46 +61,41 @@ namespace projektas_2_bankomatas
                 }
             }
             BankCard currentUser = new BankCard(0, 0, "");
-            bank.ListOfCardsInBank.ForEach(x =>
+            //SingleOrDefault panaudot 
+            var foundCard = bank.ListOfCardsInBank.SingleOrDefault(x => x.CardNumber == inputtedCard);
+            var incorrectCount = 0;
+            var correctInput = true;
+            while (correctInput)
             {
-                if(x.CardNumber == inputtedCard)
+                if(foundCard == null)
                 {
-                    var incorrectCount = 0;
-                    var correctInput = true;
-                    while (correctInput)
-                    {
-                        Console.Clear();
-                        Console.WriteLine("Enter your password: ");
-                        var input = Console.ReadLine();
-                        if(input == x.Password)
-                        {
-                            correctInput = false;
-                            Console.WriteLine("Successfully logged in!");
-                            Console.WriteLine($"Account balance: {x.AccountBalance}");
-                            currentUser = x;
-                            Console.ReadLine();
-                        }
-                        else
-                        {
-                            Console.WriteLine("Incorrect password, try again.");
-                            Console.ReadLine();
-                            incorrectCount++;
-                        }
-                        if(incorrectCount == 3)
-                        {
-                            Console.WriteLine("Too many login attempts, shutting down.");
-                            break;
-                        }
-                    }
+                    Console.WriteLine($"Didn't find a card with the number {inputtedCard}. You have to go to the bank to add your account.");
+                    correctInput = false;
+                    break;
                 }
-            });
-            if (currentUser.CardNumber == 0)
-            {
-                Console.WriteLine($"Didn't find a card with the number {inputtedCard}. You have to go to the bank to add your account.");                
-            }
-            else
-            {
-                BankCardOperations.Instance.Menu(currentUser);
+                Console.Clear();
+                Console.WriteLine("Enter your password: ");
+                var input = Console.ReadLine();
+                if (input == foundCard.Password)
+                {
+                    correctInput = false;
+                    Console.WriteLine("Successfully logged in!");
+                    Console.WriteLine($"Account balance: {foundCard.AccountBalance}");
+                    currentUser = foundCard;
+                    Console.ReadLine();
+                    Menu.OpenMenu(currentUser);
+                }
+                else
+                {
+                    Console.WriteLine("Incorrect password, try again.");
+                    Console.ReadLine();
+                    incorrectCount++;
+                }
+                if (incorrectCount == 3)
+                {
+                    Console.WriteLine("Too many login attempts, shutting down.");
+                    break;
+                }
             }
             WriteNewInformation(bank, bankFile);
 
