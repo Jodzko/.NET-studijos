@@ -6,8 +6,9 @@ namespace projektas_2_bankomatas
     public class Hashing
     {
         public static byte[] Salt;
+        public static string SaltBase64;
         public static string ToSHA256(string s)
-        {            
+        {
             using var sha256 = SHA256.Create();
             byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(s));
 
@@ -25,23 +26,30 @@ namespace projektas_2_bankomatas
             {
                 byte[] salt = new byte[size];
                 rng.GetBytes(salt);
+                SaltBase64 = Convert.ToBase64String(salt);
                 return Salt = salt;                
-            }
+            }           
+        }
+        public static bool CheckIfPasswordIsCorrect(string enteredPassword, string storedHash, string storedSalt)
+        {
+            byte[] salt = Convert.FromBase64String(storedSalt);
+            string hashOfEnteredPassword = HashPasswordWithSalt(enteredPassword, salt);
+            return storedHash == hashOfEnteredPassword;
+        }
+        public static (string Salt, string HashedPassword) HashPassword(string password)
+        {
+            byte[] salt = GenerateSalt(16);
+            string hashedPassword = HashPasswordWithSalt(password, salt);
+            string saltBase64 = Convert.ToBase64String(salt);
+            return (saltBase64, hashedPassword);
 
         }
-
-        public static string HashPasswordWithSalt(string s)
+        public static string HashPasswordWithSalt(string s, byte[] salt)
         {
-            
-            using (var sha256 = SHA256.Create())
-            {               
-                byte[] passwordBytes = Encoding.UTF8.GetBytes(s);
-                byte[] saltedPassword = new byte[passwordBytes.Length + Salt.Length];
-                Buffer.BlockCopy(passwordBytes, 0, saltedPassword, 0, passwordBytes.Length);
-                Buffer.BlockCopy(Salt, 0, saltedPassword, passwordBytes.Length, Salt.Length);
-
-                byte[] hashedBytes = sha256.ComputeHash(saltedPassword);
-                return Convert.ToBase64String(hashedBytes);
+            using (var pbkdf2 = new PasswordDeriveBytes(s, salt))
+            {
+                byte[] hash = pbkdf2.GetBytes(32); 
+                return Convert.ToBase64String(hash);
             }
         }
     }

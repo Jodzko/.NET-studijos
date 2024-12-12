@@ -6,7 +6,8 @@ namespace projektas_2_bankomatas
     {                
         public decimal AccountBalance { get; internal set; }
         public int CardNumber { get; private set; }
-        internal string Password { get; private set; }
+        internal string PasswordHashed { get; private set; }
+        public string StoredSalt { get; private set; }
         internal int NumberOfTransactions = 0;
         internal readonly string TransactionsPath = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Transactions.txt";
         internal DateTime lastResetDate = DateTime.Now.Date;
@@ -16,11 +17,12 @@ namespace projektas_2_bankomatas
         {
 
         }
-        public BankCard(int cardNumber, decimal accountBalance, string password)
+        public BankCard(int cardNumber, decimal accountBalance, string password, string salt)
         {
             AccountBalance = accountBalance;
             CardNumber = cardNumber;
-            Password = password;
+            PasswordHashed = password;
+            StoredSalt = salt;
         }         
     }
 }

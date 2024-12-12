@@ -55,6 +55,10 @@
                         while (isAmountIncorrect)
                         {
                             BankCardOperations.LimitOfTransactionsReached(card, out isAmountIncorrect);
+                            if (!isAmountIncorrect)
+                            {
+                                break;
+                            }
                             Console.WriteLine("Enter the amount you want to withdraw: ");
                             if (!int.TryParse(Console.ReadLine(), out int input))
                             {
@@ -64,6 +68,7 @@
                             {
                                 Console.WriteLine("The maximum amount to withdraw is 1000");
                                 Console.ReadLine();
+                                break;
                             }
                             if (card.NumberOfTransactions < 10)
                             {
@@ -79,6 +84,10 @@
                         while (isAmountIncorrect)
                         {
                             BankCardOperations.LimitOfTransactionsReached(card, out isAmountIncorrect);
+                            if (!isAmountIncorrect)
+                            {
+                                break;
+                            }
                             Console.WriteLine("Enter the amount you want to Add: ");
                             if (!int.TryParse(Console.ReadLine(), out int input))
                             {

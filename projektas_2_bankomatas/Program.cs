@@ -9,44 +9,13 @@ namespace projektas_2_bankomatas
         static void Main(string[] args)
         {
             var bankFile = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Bankomatas.txt";
-            var transactionsFile = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Transactions.txt";
-            //var card1 = new BankCard(123456789, 1500000, "Slaptazodis1");
-            //var card2 = new BankCard(123456790, 250000, "Slaptazodis2");
-            //var card3 = new BankCard(123456791, 100000, "Slaptazodis3");
-            //var card4 = new BankCard(123456792, 1000000, "Slaptazodis4");
-            //var card5 = new BankCard(123456793, 50000, "Slaptazodis5");
-            //var bank = new Bank();
-            //bank.AddCard(card1);
-            //bank.AddCard(card2);
-            //bank.AddCard(card3);
-            //bank.AddCard(card4);
-            //bank.AddCard(card5);
-
-            //var writer = new StreamWriter(bankFile);
-            //bank.ListOfCardsInBank.ForEach(x =>
-            //{
-            //    writer.WriteLine($"{x.CardNumber}   {x.AccountBalance}  {x.Password}");
-
-
-            //});
-            //writer.Close();
-            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis1"));
-            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis2"));
-            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis3"));
-            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis4"));
-            //Console.WriteLine(Hashing.ToSHA256("Slaptazodis5"));
-            //Hashing.GenerateSalt();
-            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis1"));
-            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis2"));
-            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis3"));
-            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis4"));
-            //Console.WriteLine(Hashing.HashPasswordWithSalt("Slaptazodis5"));
+            var transactionsFile = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Transactions.txt"; 
             var bank = new Bank();
             var reader = File.ReadAllLines(bankFile);
             foreach (var item in reader)
             {
                 string[] fileContent = item.Split(" ");
-                bank.AddCard(new BankCard(int.Parse(fileContent[0]), int.Parse(fileContent[1]), fileContent[2]));
+                bank.AddCard(new BankCard(int.Parse(fileContent[0]), int.Parse(fileContent[1]), fileContent[2], fileContent[3]));
             }
             var inputingCard = true;
             var inputtedCard = 0;
@@ -72,8 +41,7 @@ namespace projektas_2_bankomatas
                     } 
                 }
             }
-            BankCard currentUser = new BankCard(0, 0, "");
-            //SingleOrDefault panaudot 
+            BankCard currentUser = new BankCard(0, 0, "", "");
             var foundCard = bank.ListOfCardsInBank.SingleOrDefault(x => x.CardNumber == inputtedCard);
             var incorrectCount = 0;
             var correctInput = true;
@@ -86,9 +54,18 @@ namespace projektas_2_bankomatas
                     break;
                 }
                 Console.Clear();
-                Console.WriteLine("Enter your password: ");
-                var input = Console.ReadLine();
-                if (Hashing.ToSHA256(input) == foundCard.Password)
+                string input;
+                while (true)
+                {
+                    Console.WriteLine("Enter your password: ");
+                    var enter = Console.ReadLine();
+                    if(enter != null)
+                    {
+                        input = enter;
+                        break;                       
+                    }
+                }
+                if (Hashing.CheckIfPasswordIsCorrect(input, foundCard.PasswordHashed, foundCard.StoredSalt))
                 {
                     correctInput = false;
                     Console.WriteLine("Successfully logged in!");
@@ -116,7 +93,7 @@ namespace projektas_2_bankomatas
             var writer = new StreamWriter(path);
             bank.ListOfCardsInBank.ForEach(x =>
             {
-                writer.WriteLine($"{x.CardNumber} {x.AccountBalance} {x.Password}");
+                writer.WriteLine($"{x.CardNumber} {x.AccountBalance} {x.PasswordHashed} {x.StoredSalt}");
             });
             writer.Close();
         }
