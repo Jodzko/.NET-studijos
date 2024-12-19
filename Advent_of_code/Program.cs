@@ -54,26 +54,84 @@
             foreach (var item in read)
             {
                 string[] items = item.Split(' ');
-
-                for (int i = 0; i < items.Length - 1; i++)
-                {
-                    if ((int.Parse(items[i + 1]) - int.Parse(items[i])) < 3)
+               
+                    if (IsArrayAscending(items) || IsArrayDescending(items))
                     {
-                        if (items == items.OrderBy(x=> x) || items.OrderByDescending(x => x) == items.AsEnumerable())
+                        if (IsNumberDifferenceLessThan3(items))
                         {
-                            if (i == items.Length - 2)
-                            {
-                                safeReports++;
-                            }
+                        safeReports++;
                         }
-                    }
-                    
-                }
+                    }                                  
                 
             }
 
 
-            Console.WriteLine();
+            Console.WriteLine(safeReports);
+        }
+        public static bool IsArrayAscending(string[] array)
+        {
+            for (int i = 1; i < array.Length; i++)
+            {
+                if (int.Parse(array[i - 1]) > int.Parse(array[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public static bool IsArrayDescending(string[] array)
+        {
+            for(int i = 1; i < array.Length; i++)
+            {
+                if (int.Parse(array[i - 1]) < int.Parse(array[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        public static bool IsNumberDifferenceLessThan3(string[] array)
+        {           
+                if (IsArrayAscending(array))
+                {
+                var badCounter = 0;
+                for (int i = 0; i < array.Length - 1; i++)
+                    {
+                    if ((int.Parse(array[i + 1]) - int.Parse(array[i])) > 0 && (int.Parse(array[i + 1]) - int.Parse(array[i])) <= 3 && (int.Parse(array[i + 1]) - int.Parse(array[i])) != 0)
+                        {
+                        continue ;
+                        }
+                    else
+                    {
+                       return false;
+                    }
+                    }
+                return true;
+                }
+                else if (IsArrayDescending(array))
+                {
+                for (int i = 0; i < array.Length - 1; i++)
+                {
+                    if ((int.Parse(array[i]) - int.Parse(array[i + 1])) > 0 && (int.Parse(array[i]) - int.Parse(array[i + 1])) <= 3 && (int.Parse(array[i + 1]) - int.Parse(array[i])) != 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return true;
+                }
+            return false;
+        }
+        public static bool RemovingOneNumber(string[] array)
+        {
+            string[] newArray;
+            for (int i = 0; i < array.Length; i++)
+            {
+                array.CopyTo(newArray,)
+            }
         }
     }
 }
