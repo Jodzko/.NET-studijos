@@ -2,9 +2,14 @@
 {
     public static class Writer
     {
-        public static void FileWriter(string path, string[] whatToAppend)
+        public static void AppendToFile(string path, string whatToAppend)
         {
-            File.AppendAllLines(path, whatToAppend);            
+            File.AppendAllText(path, whatToAppend);            
+        }
+
+        public static void ChangeUniqueSerialNumber(string path, int whatToWrite)
+        {
+            File.WriteAllText(path, whatToWrite.ToString());
         }
     }
 }

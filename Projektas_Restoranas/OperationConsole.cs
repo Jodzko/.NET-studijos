@@ -59,7 +59,8 @@
             {
                 if (item.IsTableAvailable == true && item.NumberOfSeats >= amountOfPeople)
                 {
-                    Console.WriteLine($"Table {item.TableNumber} is available for this group");
+                    Console.WriteLine($"Table {item.TableNumber} seats {item.NumberOfSeats} people and is available");
+                    Console.WriteLine("\n");
                 }
                 if (item.NumberOfSeats < amountOfPeople)
                 {
@@ -87,6 +88,8 @@
                         else
                         {
                             choice = result;
+                            tableChoice = false;
+                            break;
                         }
                 }
             }
@@ -97,6 +100,7 @@
                     chosenTable = item;
                     MakeTableUnavailable(chosenTable);
                     tableChoice = false;
+                        break;
                 }
             }
             }
@@ -111,6 +115,11 @@
             {
                 int.TryParse(Console.ReadLine().Trim(), out result);
                 if (result <= numberOfChoices && result > 0)
+                {
+                    breaking = false;
+                    break;
+                }
+                else if(result == 0)
                 {
                     breaking = false;
                     break;
@@ -159,23 +168,20 @@
             }
         }
 
-        public static Table FindTable(int tableNumber)/////////////////////////
+        public static Table FindTable(int tableNumber)
         {
-            try 
-            { 
-            foreach (var item in Table.ListOfTables)
+            if (Table.ListOfTables != null)
             {
-                if (item.TableNumber == tableNumber)
-                {
-                    return item;
-                }
-            }
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
+               foreach (var item in Table.ListOfTables)
+               {
+                   if (item.TableNumber == tableNumber)
+               {
+                       return item;
+               }
+                   }
             }
             return default;
+                }
         }
     }
-}
+

@@ -7,5 +7,12 @@
             var read = File.ReadAllLines(path);
             return read;
         }
+
+        public static int SerialNumberGetter(string path)
+        {
+            var read = Reader.FileReader(path);
+            var newSerialNumber = int.Parse(read[0]);
+            return newSerialNumber;
+        }
     }
 }

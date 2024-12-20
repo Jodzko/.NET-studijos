@@ -4,7 +4,9 @@
     {
         public static readonly string foodMenuPath = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Restaurant\\FoodMenu.txt";
         public static readonly string drinksMenuPath = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Restaurant\\DrinkMenu.txt";
-        public int UniqueSerialNumber;
+        public static readonly string SerialNumberPath = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Restaurant\\SerialNumberCounter.txt";
+
+        public int UniqueSerialNumber { get; set; }
         public decimal TheTaxForThisTransaction;
         public int TableNumber { get; set; }
         public int NumberOfSeats { get; set; }
@@ -18,7 +20,6 @@
 
         public Order(Table table)
         {
-            UniqueSerialNumber = UniqueSerialNumber++;
             TableNumber = table.TableNumber;
             NumberOfSeats = table.NumberOfSeats;
             TimeWhenSatDown = table.TimeWhenSatDown;

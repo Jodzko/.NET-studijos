@@ -2,12 +2,19 @@
 {
     public class OrderOperations
     {
-        public void StartOrder(Order order)
+        public readonly string UniqueSerialNumberFile = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Restaurant\\SerialNumberCounter.txt";
+
+
+        public void StartOrder(Order order, Waiter waiter)
         {
+            var lastSerialNumber = Reader.SerialNumberGetter(UniqueSerialNumberFile);
+            order.UniqueSerialNumber = lastSerialNumber + 1;
+            Writer.ChangeUniqueSerialNumber(UniqueSerialNumberFile, order.UniqueSerialNumber);
             var choosing = true;
             int numberOfItemsToOrder = 0;
             while (choosing)
             {
+                Console.Clear();
                 Console.WriteLine("How many drinks did the table order?");
                 OperationConsole.ValidateInput(50, out bool menuOption, out numberOfItemsToOrder, out choosing);
                 ChoosingDrinks(numberOfItemsToOrder, order, out choosing);
@@ -16,6 +23,7 @@
             choosing = true;
             while (choosing)
             {
+                Console.Clear();
                 Console.WriteLine("How many dishes did the table order?");
                 OperationConsole.ValidateInput(50, out bool menuOption, out numberOfItemsToOrder, out choosing);
                 ChoosingFood(numberOfItemsToOrder,order, out choosing);
@@ -23,6 +31,7 @@
 
             }
             Order.ListOfOrders.Add(order);
+            waiter.ListOfOrdersForThisWaiter.Add(order);
         }
 
         public void ChoosingDrinks(int numberOfDrinksToOrder,Order order ,out bool choosing)
@@ -32,7 +41,7 @@
             while (orderedDrinks < numberOfDrinksToOrder)
             {
                 Console.Clear();
-                string[] drinksMenu = DrinksMenu.ShowDrinkMenu(Order.drinksMenuPath);
+                string[] drinksMenu = PrintingService.ShowDrinkMenu(Order.drinksMenuPath);
                 Console.WriteLine("Choose a drink: ");
                 OperationConsole.ValidateInput(12, out bool menuOption, out int result, out bool breaking);
                 foreach (var item in drinksMenu)
@@ -61,7 +70,7 @@
             while (orderedDishes < numberOfDishesToOrder)
             {
                 Console.Clear();
-                string[] foodMenu = FoodMenu.ShowFoodMenu(Order.foodMenuPath);
+                string[] foodMenu = PrintingService.ShowFoodMenu(Order.foodMenuPath);
                 Console.WriteLine("Choose a dish: ");
                 OperationConsole.ValidateInput(12, out bool menuOption, out int result, out bool breaking);
                 foreach (var item in foodMenu)
@@ -88,7 +97,7 @@
             Order mostRecentOrder = new Order(OperationConsole.FindTable(1));
             var listOfOrdersOnTheTable = new List<Order>();
             var orderCount = 0;
-            if (Order.ListOfOrders != null)
+            if (Order.ListOfOrders.Count != 0)
             {
                 foreach (var item in Order.ListOfOrders)
                 {
@@ -100,13 +109,14 @@
                 }
                 if (orderCount > 0)
                 {
+                    mostRecentOrder = listOfOrdersOnTheTable[0];
                     for (int i = 0; i < listOfOrdersOnTheTable.Count - 1; i++)
-                    {
+                    {                        
                         if (listOfOrdersOnTheTable[i].UniqueSerialNumber > listOfOrdersOnTheTable[i + 1].UniqueSerialNumber)
                         {
                             mostRecentOrder = listOfOrdersOnTheTable[i];
                         }
-                        else
+                        else if(listOfOrdersOnTheTable[i].UniqueSerialNumber < listOfOrdersOnTheTable[i + 1].UniqueSerialNumber)
                         {
                             mostRecentOrder = listOfOrdersOnTheTable[i + 1];
                         }
@@ -132,44 +142,83 @@
 
         public static void AddToAnExistingOrder(Order order)
         {
-            var choosing = true;
-            int numberOfItemsToOrder = 0;
-            while (choosing)
+            if (Order.ListOfOrders != null)
             {
-                Console.WriteLine("How many drinks did the table order?");
-                OperationConsole.ValidateInput(50, out bool menuOption, out numberOfItemsToOrder, out choosing);
-                order.ChoosingDrinks(numberOfItemsToOrder, order, out choosing);
-                break;
-            }
-            choosing = true;
-            while (choosing)
-            {
-                Console.WriteLine("How many dishes did the table order?");
-                OperationConsole.ValidateInput(50, out bool menuOption, out numberOfItemsToOrder, out choosing);
-                order.ChoosingFood(numberOfItemsToOrder, order, out choosing);
-                break;
+                if (Order.ListOfOrders.Contains(order))
+                {
+                    var choosing = true;
+                    int numberOfItemsToOrder = 0;
+                    while (choosing)
+                    {
+                        Console.WriteLine("How many drinks did the table order?");
+                        OperationConsole.ValidateInput(50, out bool menuOption, out numberOfItemsToOrder, out choosing);
+                        order.ChoosingDrinks(numberOfItemsToOrder, order, out choosing);
+                        break;
+                    }
+                    choosing = true;
+                    while (choosing)
+                    {
+                        Console.WriteLine("How many dishes did the table order?");
+                        OperationConsole.ValidateInput(50, out bool menuOption, out numberOfItemsToOrder, out choosing);
+                        order.ChoosingFood(numberOfItemsToOrder, order, out choosing);
+                        break;
 
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("The order is not in the system.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("There are no current ongoing orders.");
             }
         }
 
-        public Order FindOrder(int tableNumber)////////////////////////////
+        public static Order FindOrder(int tableNumber, out bool breaking)
         {
-            if (Order.ListOfOrders != null)
+            breaking = true;
+            var mostRecentOrder = new Order(OperationConsole.FindTable(tableNumber));
+            var ordersOfTable = new List<Order>();
+            if (Order.ListOfOrders.Count != 0)
             {
                 foreach (var item in Order.ListOfOrders)
                 {
                     if (item.TableNumber == tableNumber)
                     {
-                        return item;
+                        ordersOfTable.Add(item);                        
                     }
+                }
+                if (ordersOfTable.Count != 0)
+                {
+                    mostRecentOrder = ordersOfTable[0];
+                    for (int i = 0; i < ordersOfTable.Count - 1; i++)
+                    {
+                        if (ordersOfTable[i].UniqueSerialNumber > ordersOfTable[i + 1].UniqueSerialNumber)
+                        {
+                            mostRecentOrder = ordersOfTable[i];
+                        }
+                        else
+                        {
+                            mostRecentOrder = ordersOfTable[i + 1];
+                        }
+                    }
+                    breaking = false;
+                    return mostRecentOrder;
+                }
+                else
+                {
+                    breaking = true;
+                    return default;
                 }
             }
             else
             {
+                breaking = true;
                 Console.WriteLine("Couldn't find that order");
                 return default;
             }
-            return default;
         }
     }
 }
