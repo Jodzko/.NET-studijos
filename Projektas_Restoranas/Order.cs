@@ -17,6 +17,7 @@
         public DateTime TimeWhenOrderFinished { get; set; }
         public List<string> Receipt;
         public static List<Order> ListOfOrders = new List<Order>();
+        public static List<Order> ListOfActiveOrders = new List<Order>();
 
         public Order(Table table)
         {

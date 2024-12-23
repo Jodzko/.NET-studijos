@@ -26,43 +26,84 @@
                     switch (result)
                     {
                         case 1:
-                            Console.Clear();
-                            breaking = true;
-                            while (breaking)
+                            if (OperationConsole.OccupiedTablesCount() == Table.ListOfTables.Count)
                             {
-                                Console.WriteLine("Enter the amount of people to be seated: ");
-                                OperationConsole.ValidateInput(50, out menuOption, out result, out breaking);
-                                OperationConsole.SeatPeople(result);
-                                OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                Console.WriteLine("All the tables are occupied, you must wait for customers to leave, then you can seat other customers.");
+                                Console.ReadLine();
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                breaking = true;
+                                while (breaking)
+                                {
+                                    Console.WriteLine("Enter the amount of people to be seated: ");
+                                    OperationConsole.ValidateInput(50, out menuOption, out result, out breaking);
+                                    if (result != 0)
+                                    {
+                                        OperationConsole.SeatPeople(result);
+                                        OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                    }
+                                    else breaking = false;
+                                }
                             }
                             break;
                         case 2:
                             Console.Clear();
-                            Console.WriteLine("Which table has become available?: ");
-                            OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
-                            OperationConsole.MakeTableAvailable(OperationConsole.FindTable(result));
-                            OperationConsole.GoBackToMenu(out menuOption, out choosing);
-                            break;
-                        case 3:
-                            Console.Clear();
-                            Console.WriteLine("Enter the number of the table for the order: ");
-                            OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
-                            if (OperationConsole.FindTable(result).IsTableAvailable == true)
+                            if (OperationConsole.OccupiedTablesCount() == 0)
                             {
-                                Console.WriteLine("You must first seat people.");
-                                Console.ReadKey();
+                                Console.WriteLine("All the tables are unoccupied.");
+                                Console.ReadLine();
                             }
                             else
                             {
-                                var newOrder = new Order(OperationConsole.FindTable(result));
-                                newOrder.StartOrder(newOrder, waiter);
-                                OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                Console.WriteLine("Which table has become available?: ");
+                                OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
+                                if (result != 0)
+                                {
+                                    OperationConsole.MakeTableAvailable(OperationConsole.FindTable(result));
+                                    OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                }
                             }
+                            break;
+                        case 3:
+                            if (OperationConsole.OccupiedTablesCount() == 0)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("All the tables are unoccupied, you must first seat people.");
+                                Console.ReadLine();
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.WriteLine("Enter the number of the table for the order: ");
+                                OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
+                                if (result != 0)
+                                {
+                                    if (OperationConsole.FindTable(result).IsTableAvailable == true)
+                                    {
+                                        Console.WriteLine("You must first seat people.");
+                                        Console.ReadLine();
+                                    }
+                                    else if (OrderOperations.FindOrder(result, out breaking) != default)
+                                    {
+                                        Console.WriteLine("This table already has an ongoing order");
+                                        Console.ReadLine();
+                                    }
+                                    else
+                                    {
+                                        var newOrder = new Order(OperationConsole.FindTable(result));
+                                        newOrder.StartOrder(newOrder, waiter);
+                                        OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                    }
+                                }
+                            }
+
                             break;
                         case 4:
                             if (Order.ListOfOrders.Count != 0)
                             {
-                                Console.WriteLine("Enter which table's order you would like to edit: ");
+                                Console.WriteLine("Enter which table's order you would like to add to: ");
                                 OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
                                 OrderOperations.AddToAnExistingOrder(OrderOperations.FindOrder(result, out breaking));
                                 OperationConsole.GoBackToMenu(out menuOption, out choosing);
@@ -70,7 +111,7 @@
                             else
                             {
                                 Console.WriteLine("There are no ongoing orders.");
-                                Console.ReadKey();
+                                Console.ReadLine();
                             }
                             break;
                         case 5:
@@ -79,76 +120,99 @@
                             OperationConsole.GoBackToMenu(out menuOption, out choosing);
                             break;
                         case 6:
-                            breaking = true;
-                            var order = new Order(OperationConsole.FindTable(1));
-                            while (breaking)
+                            if (Order.ListOfOrders.Count > 0)
                             {
-                                Console.WriteLine("Which table's receipt would you like to print?");
-                                OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
-                                if(result == 0)
+                                bool digitalReceipt = false;
+                                breaking = true;
+                                var order = new Order(OperationConsole.FindTable(1));
+                                while (breaking)
                                 {
-                                    Console.WriteLine("Incorrect input, try again.");
-                                    Console.ReadLine();
-                                    break;
+                                    Console.WriteLine("Which table's receipt would you like to print?");
+                                    OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
+                                    if (result != 0)
+                                    {
+                                        order = OrderOperations.FindOrder(result, out breaking);
+                                        break;
+                                    }
                                 }
-                                else
+                                if (result != 0)
                                 {
-                                    order = OrderOperations.FindOrder(result, out breaking);
-                                    break;
+                                    if (!breaking)
+                                    {
+                                        while (!breaking)
+                                        {
+                                            Console.WriteLine("Would the customer like a receipt?            (Y/N)");
+                                            string receipt = Console.ReadLine();
+                                            if (string.IsNullOrEmpty(receipt.Trim()))
+                                            {
+                                                Console.WriteLine("Incorrect input, try again.");
+                                            }
+                                            else if (receipt.ToLower() == "n")
+                                            {
+                                                PrintingService.PrintRestaurantReceipt(order, waiter);
+                                                Console.WriteLine(PrintingService.PrintRestaurantReceipt(order, waiter));
+                                                breaking = true;
+                                                digitalReceipt = true;
+                                            }
+                                            else if (receipt.ToLower() == "y")
+                                            {
+                                                PrintingService.PrintCustomerReceipt(order, waiter);
+                                                PrintingService.PrintRestaurantReceipt(order, waiter);
+                                                Console.WriteLine(PrintingService.PrintRestaurantReceipt(order, waiter));
+                                                breaking = true;
+                                                digitalReceipt = true;
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine("Incorrect input, try again. ");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("That table doesn't have an ongoing order.");
+                                    }
+                                    while (breaking && digitalReceipt)
+                                    {
+                                        Console.WriteLine("Would the customer like a digital receipt? ");
+                                        string receipt = Console.ReadLine();
+                                        if (string.IsNullOrEmpty(receipt.Trim()))
+                                        {
+                                            Console.WriteLine("Incorrect input, try again.");
+                                        }
+                                        else if (receipt.ToLower() == "n")
+                                        {
+                                            breaking = false;
+                                            break;
+                                        }
+                                        else if (receipt.ToLower() == "y")
+                                        {
+                                            var sendingMail = new MailSendingService();
+                                            sendingMail.SendRestaurantReceipt(order, waiter);
+                                            sendingMail.SendCustomerReceipt(order, waiter);
+                                            breaking = false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Incorrect input, try again. ");
+                                            break;
+                                        }
+                                    }
+                                    Order.ListOfActiveOrders.Remove(order);
+                                    OperationConsole.GoBackToMenu(out menuOption, out choosing);
                                 }
                             }
-                            while (!breaking) 
-                            { 
-                            Console.WriteLine("Would the customer like a receipt?            (Y/N)");
-                            string receipt = Console.ReadLine();
-                            if (string.IsNullOrEmpty(receipt.Trim()))
+                            else
                             {
-                                    Console.WriteLine("Incorrect input, try again.");
-                            }
-                            else if(receipt.ToLower() == "n")
-                                {
-                                    PrintingService.PrintRestaurantReceipt(order, waiter);
-                                    breaking = true;
-                                }
-                            else if(receipt.ToLower() == "y")
-                                {
-                                    PrintingService.PrintCustomerReceipt(order, waiter);
-                                    PrintingService.PrintRestaurantReceipt(order, waiter);
-                                    breaking = true;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Incorrect input, try again. ");
-                                    break;
-                                }
-                            }
-                            while (breaking)
-                            {
-                                Console.WriteLine("Would the customer like a digital receipt? ");
-                                string receipt = Console.ReadLine();
-                                if (string.IsNullOrEmpty(receipt.Trim()))
-                                {
-                                    Console.WriteLine("Incorrect input, try again.");
-                                }
-                                else if (receipt.ToLower() == "n")
-                                {
-                                    breaking = false;
-                                    break;
-                                }
-                                else if (receipt.ToLower() == "y")
-                                {
-                                    MailSendingService.SendingEmail(order);
-                                    breaking = false;
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Incorrect input, try again. ");
-                                    break;
-                                }
+                                Console.Clear();
+                                Console.WriteLine("There are no ongoing orders.");
+                                Console.ReadLine();
+                                break;
                             }
 
-                            OperationConsole.GoBackToMenu(out menuOption, out choosing);
                             break;
                         case 7:
                             Console.Clear();
@@ -161,22 +225,37 @@
                             }
                             else
                             {
+                                Console.Clear();
                                 Console.WriteLine("There are no ongoing orders.");
-                                Console.ReadKey();
+                                Console.ReadLine();
                             }
                             break;
                         case 8:
-                            Console.Clear();
-                            Console.WriteLine("Which table would you like to reserve?: ");
-                            OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
-                            if(OperationConsole.FindTable(result).IsTableAvailable == false)
+                            if (OperationConsole.OccupiedTablesCount() != Table.ListOfTables.Count)
                             {
-                                Console.WriteLine("You must first make the table available, wait for the customers to leave, then reserve this table.");
+                                Console.Clear();
+                                Console.WriteLine("Which table would you like to reserve?: ");
+                                OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
+                                if (result != 0)
+                                {
+                                    if (OperationConsole.FindTable(result).IsTableAvailable == false)
+                                    {
+                                        Console.Clear();
+                                        Console.WriteLine("You must first make the table available, wait for the customers to leave, then reserve this table.");
+                                        Console.ReadLine();
+                                    }
+                                    else
+                                    {
+                                        OperationConsole.MakeTableUnavailable(OperationConsole.FindTable(result));
+
+                                    }
+                                }
                             }
                             else
                             {
-                                OperationConsole.MakeTableUnavailable(OperationConsole.FindTable(result));
-
+                                Console.Clear();
+                                Console.WriteLine("All the tables are unavailable right now, you must wait for the customers to leave, then reserve the table.");
+                                Console.ReadLine();
                             }
                             break;
 
@@ -187,12 +266,12 @@
                             break;
                         default:
                             Console.WriteLine("Incorrect input, try again");
-                            Console.ReadKey();
+                            Console.ReadLine();
                             break;
                     }
 
                 }
             }
-        }
+        }        
     }
 }

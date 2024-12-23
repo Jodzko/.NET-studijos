@@ -1,4 +1,6 @@
-﻿namespace Projektas_Restoranas
+﻿using System.Text;
+
+namespace Projektas_Restoranas
 {
     public static class PrintingService
     {
@@ -30,31 +32,39 @@
             return read;
         }
 
-        public static void PrintCustomerReceipt(Order order, Waiter waiter)
+        public static string PrintCustomerReceipt(Order order, Waiter waiter)
         {
-            Console.WriteLine($"{order.TimeWhenSatDown}");
+            Console.Clear();
+            var builder = new StringBuilder();
+            builder.AppendLine($"{order.TimeWhenSatDown}");
             foreach (var item in order.Receipt)
             {
-                Console.WriteLine(item);
+                builder.AppendLine(item);
             }
-            Console.WriteLine($"Your total is: {order.TotalPrice} Euros.");
-            Console.WriteLine($"You were server by {waiter.Name}");
-            Console.WriteLine("\n");
-            Console.WriteLine("Thank you for dining with us, come back soon!");
+            builder.AppendLine($"Your total is: {order.TotalPrice} Euros.");
+            builder.AppendLine($"You were server by {waiter.Name}");
+            builder.AppendLine("\n");
+            builder.AppendLine("Thank you for dining with us, come back soon!");
+            Console.WriteLine(builder.ToString()); 
+            return builder.ToString();
         }
 
-        public static void PrintRestaurantReceipt(Order order, Waiter waiter)
+        public static string PrintRestaurantReceipt(Order order, Waiter waiter)
         {
-            order.TimeWhenOrderFinished = DateTime.Now;
-            Writer.AppendToFile(RestaurantReceipts, $"Order starting time {order.TimeWhenSatDown} \n");
-            Writer.AppendToFile(RestaurantReceipts, $"Order serial number {order.UniqueSerialNumber}\n");
-            Writer.AppendToFile(RestaurantReceipts, $"Order seated at table number {order.TableNumber}\n");
-            Writer.AppendToFile(RestaurantReceipts, $"Name of the waiter {waiter.Name}\n");
-            Writer.AppendToFile(RestaurantReceipts, $"The total price of the order {order.TotalPrice}\n");
+            var builder = new StringBuilder();
             order.TheTaxForThisTransaction = order.TotalPrice * (decimal)0.21;
-            Writer.AppendToFile(RestaurantReceipts, $"The amount of tax to pay for this transaction {order.TheTaxForThisTransaction}\n");
-            Writer.AppendToFile(RestaurantReceipts, $"Order finish time {order.TimeWhenOrderFinished}\n");
-            Writer.AppendToFile(RestaurantReceipts, "\n");
+            order.TimeWhenOrderFinished = DateTime.Now;
+            builder.AppendLine($" \t\t\t Restaurant receipt:");
+            builder.AppendLine($"Order starting time {order.TimeWhenSatDown}");
+            builder.AppendLine($"Order serial number {order.UniqueSerialNumber}");
+            builder.AppendLine($"Order seated at table number {order.TableNumber}");
+            builder.AppendLine($"Name of the waiter {waiter.Name}");
+            builder.AppendLine($"The total price of the order {order.TotalPrice}");
+            builder.AppendLine($"The amount of tax to pay for this transaction {order.TheTaxForThisTransaction}");
+            builder.AppendLine($"Order finish time {order.TimeWhenOrderFinished}");
+            builder.AppendLine("");
+            Writer.AppendToFile(RestaurantReceipts, builder.ToString());
+            return builder.ToString();
         }
     }
 }

@@ -30,6 +30,7 @@
                 break;
 
             }
+            Order.ListOfActiveOrders.Add(order);
             Order.ListOfOrders.Add(order);
             waiter.ListOfOrdersForThisWaiter.Add(order);
         }
@@ -94,55 +95,34 @@
 
         public static void ShowOngoingOrder(int tableNumber)
         {
-            Order mostRecentOrder = new Order(OperationConsole.FindTable(1));
-            var listOfOrdersOnTheTable = new List<Order>();
-            var orderCount = 0;
-            if (Order.ListOfOrders.Count != 0)
+            Console.Clear();
+            if (Order.ListOfActiveOrders.Count != 0)
             {
-                foreach (var item in Order.ListOfOrders)
+                foreach (var item in Order.ListOfActiveOrders)
                 {
                     if (tableNumber == item.TableNumber)
                     {
-                        orderCount++;
-                        listOfOrdersOnTheTable.Add(item);
-                    }
-                }
-                if (orderCount > 0)
-                {
-                    mostRecentOrder = listOfOrdersOnTheTable[0];
-                    for (int i = 0; i < listOfOrdersOnTheTable.Count - 1; i++)
-                    {                        
-                        if (listOfOrdersOnTheTable[i].UniqueSerialNumber > listOfOrdersOnTheTable[i + 1].UniqueSerialNumber)
+                        Console.WriteLine("Current order: ");
+                        foreach (var orderItem in item.Receipt)
                         {
-                            mostRecentOrder = listOfOrdersOnTheTable[i];
+                            Console.WriteLine(orderItem);
                         }
-                        else if(listOfOrdersOnTheTable[i].UniqueSerialNumber < listOfOrdersOnTheTable[i + 1].UniqueSerialNumber)
-                        {
-                            mostRecentOrder = listOfOrdersOnTheTable[i + 1];
-                        }
+                        Console.WriteLine($"Total:\t\t {item.TotalPrice} Euro");
                     }
-
-                    Console.WriteLine("Current order: ");
-                    foreach (var item in mostRecentOrder.Receipt)
-                    {
-                        Console.WriteLine(item);
-                    }
-                    Console.WriteLine($"Total:\t\t {mostRecentOrder.TotalPrice} Euro");
                 }
-                else
-                {
-                    Console.WriteLine("This table doesnt have any orders.");
-                }
-            }
+            }            
             else
             {
+                Console.Clear();
                 Console.WriteLine("There are no ongoing orders.");
+                Console.ReadLine();
             }
         }
 
         public static void AddToAnExistingOrder(Order order)
         {
-            if (Order.ListOfOrders != null)
+            Console.Clear();
+            if (Order.ListOfOrders.Count > 0)
             {
                 if (Order.ListOfOrders.Contains(order))
                 {
@@ -181,44 +161,24 @@
             breaking = true;
             var mostRecentOrder = new Order(OperationConsole.FindTable(tableNumber));
             var ordersOfTable = new List<Order>();
-            if (Order.ListOfOrders.Count != 0)
+            if (Order.ListOfActiveOrders.Count != 0)
             {
-                foreach (var item in Order.ListOfOrders)
+                foreach (var item in Order.ListOfActiveOrders)
                 {
                     if (item.TableNumber == tableNumber)
                     {
-                        ordersOfTable.Add(item);                        
+                        breaking = false;
+                        return item;                        
                     }
-                }
-                if (ordersOfTable.Count != 0)
-                {
-                    mostRecentOrder = ordersOfTable[0];
-                    for (int i = 0; i < ordersOfTable.Count - 1; i++)
-                    {
-                        if (ordersOfTable[i].UniqueSerialNumber > ordersOfTable[i + 1].UniqueSerialNumber)
-                        {
-                            mostRecentOrder = ordersOfTable[i];
-                        }
-                        else
-                        {
-                            mostRecentOrder = ordersOfTable[i + 1];
-                        }
-                    }
-                    breaking = false;
-                    return mostRecentOrder;
-                }
-                else
-                {
-                    breaking = true;
-                    return default;
                 }
             }
             else
             {
-                breaking = true;
-                Console.WriteLine("Couldn't find that order");
-                return default;
+                    breaking = true;
+                    return default;
             }
+            breaking = true;
+            return default;
         }
     }
 }

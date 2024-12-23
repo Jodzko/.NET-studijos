@@ -1,31 +1,66 @@
-﻿using System.Net.Mail;
+﻿using System.Net;
+using System.Net.Mail;
+using System.Text;
+
 namespace Projektas_Restoranas
 {
-    public class MailSendingService
+    public class MailSendingService : ISender
     {
-        public static void SendingEmail(Order order)
+
+        public void SendCustomerReceipt(Order order, Waiter waiter)
         {
+            using SmtpClient smtp = new SmtpClient
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                EnableSsl = true,
+                Host = "smtp.office365.com",
+                Port = 587,
+
+                Credentials = new NetworkCredential("artur.jodzko@codeacademylt.onmicrosoft.com", "Grabas123"),
+
+            };
+            string subject = "Your receipt";
+            string receipt = PrintingService.PrintCustomerReceipt(order, waiter);
+            
             try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-
-                mail.From = new MailAddress("testingforstudies3255@gmail.com");
-                mail.To.Add("testingforstudies3255@gmail.com");
-                mail.Subject = "Your Receipt";
-                mail.Body = order.Receipt.ToString();
-
-                smtp.Port = 587;
-                smtp.Credentials = new System.Net.NetworkCredential("testingforstudies3255@gmail.com", "Slaptazodis1");
-                smtp.EnableSsl = true;
-
-                smtp.Send(mail);
+                Console.WriteLine("Sending email....");
+                smtp.Send("artur.jodzko@codeacademylt.onmicrosoft.com", "artur.jodzko@codeacademylt.onmicrosoft.com", subject, receipt);
+                Console.WriteLine("Email sent successfully!");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(e.Message);
             }
         }
 
+
+        public void SendRestaurantReceipt(Order order, Waiter waiter)
+        {
+            using SmtpClient smtp = new SmtpClient
+            {
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                EnableSsl = true,
+                Host = "smtp.office365.com",
+                Port = 587,
+
+                Credentials = new NetworkCredential("artur.jodzko@codeacademylt.onmicrosoft.com", "Grabas123"),
+
+            };
+            string subject = $"Restaurant receipt, order number {order.UniqueSerialNumber}";
+            string restaurantReceipt = PrintingService.PrintRestaurantReceipt(order, waiter);
+            try
+            {
+                Console.WriteLine("Sending email....");
+                smtp.Send("artur.jodzko@codeacademylt.onmicrosoft.com", "artur.jodzko@codeacademylt.onmicrosoft.com", subject, restaurantReceipt);
+                Console.WriteLine("Email sent successfully!");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }
