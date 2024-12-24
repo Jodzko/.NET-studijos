@@ -127,6 +127,7 @@
                 if (string.IsNullOrEmpty(input))
                 {
                     Console.WriteLine("Wrong choice, try again.");
+                    Console.ReadLine();
                     continue;
                 }
                 else
@@ -147,12 +148,14 @@
                         else
                         {
                             Console.WriteLine("Wrong choice, try again.");
+                            Console.ReadLine();
                             break;
                         }
                     }
                     else
                     {
                         Console.WriteLine("Wrong choice, try again.");
+                        Console.ReadLine();
                         break;
                     }
                 }
