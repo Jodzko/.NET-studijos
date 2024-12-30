@@ -193,8 +193,10 @@
                                             Console.WriteLine("Incorrect input, try again.");
                                         }
                                         else if (receipt.ToLower() == "n")
-                                        {                                       
-                                            breaking = false;
+                                        {
+                                            var sendingMail = new MailSendingService();
+                                            sendingMail.SendRestaurantReceipt(order, waiter);
+                                            breaking = false;                                            
                                             Order.ListOfActiveOrders.Remove(order);
                                             break;
                                         }

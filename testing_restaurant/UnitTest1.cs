@@ -17,7 +17,7 @@ namespace testing_restaurant
         [Test]
         public void Test1()
         {
-            int expected = 46;
+            int expected = 47;
             int actual = Reader.SerialNumberGetter(Order.SerialNumberPath);
             Assert.AreEqual(expected, actual);
         }

@@ -18,6 +18,7 @@ namespace Projektas_Restoranas
                 Port = 587,
 
                 Credentials = new NetworkCredential("artur.jodzko@codeacademylt.onmicrosoft.com", "Grabas123"),
+                Credentials = new NetworkCredential("artur.jodzko@codeacademylt.onmicrosoft.com", "Enter password Here"),
 
             };
             string subject = "Your receipt";
