@@ -17,7 +17,6 @@ namespace Projektas_Restoranas
                 Host = "smtp.office365.com",
                 Port = 587,
 
-                Credentials = new NetworkCredential("artur.jodzko@codeacademylt.onmicrosoft.com", "Grabas123"),
                 Credentials = new NetworkCredential("artur.jodzko@codeacademylt.onmicrosoft.com", "Enter password Here"),
 
             };
