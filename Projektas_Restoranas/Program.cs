@@ -8,7 +8,6 @@
             var drinksMenuPath = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Restaurant\\DrinkMenu.txt";
             var SerialNumberPath = "C:\\Users\\AJodz\\OneDrive\\Desktop\\Restaurant\\SerialNumberCounter.txt";
 
-            Reader.SerialNumberGetter(SerialNumberPath);
             var waiter = new Waiter("John");
             Table.ListOfTables.Add(new Table(1, 4));      
             Table.ListOfTables.Add(new Table(2, 2));      

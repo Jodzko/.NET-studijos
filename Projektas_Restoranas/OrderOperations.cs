@@ -122,9 +122,9 @@
         public static void AddToAnExistingOrder(Order order)
         {
             Console.Clear();
-            if (Order.ListOfOrders.Count > 0)
+            if (Order.ListOfActiveOrders.Count > 0)
             {
-                if (Order.ListOfOrders.Contains(order))
+                if (Order.ListOfActiveOrders.Contains(order))
                 {
                     var choosing = true;
                     int numberOfItemsToOrder = 0;
@@ -180,5 +180,22 @@
             breaking = true;
             return default;
         }
+        public static void ShowOrdersOfTheDay()
+        {
+                var orderCount = 0;
+                foreach (var item in Order.ListOfOrders)
+                {
+                    if (!Order.ListOfActiveOrders.Contains(item))
+                    {
+                        Console.WriteLine($"Order number: {orderCount}");
+                        Console.WriteLine($"Order staring time: {item.TimeWhenSatDown} ");
+                        Console.WriteLine($"Order unique serial number: {item.UniqueSerialNumber}");
+                        Console.WriteLine($"Order total price: {item.TotalPrice}");
+                        Console.WriteLine($"Order finish time: {item.TimeWhenOrderFinished}");
+                        Console.WriteLine($"Order tax for the restaurant: {item.TheTaxForThisTransaction}");
+                    }
+                }
+            }
+        }
     }
-}
+

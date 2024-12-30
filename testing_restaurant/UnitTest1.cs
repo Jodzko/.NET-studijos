@@ -17,7 +17,7 @@ namespace testing_restaurant
         [Test]
         public void Test1()
         {
-            int expected = 37;
+            int expected = 46;
             int actual = Reader.SerialNumberGetter(Order.SerialNumberPath);
             Assert.AreEqual(expected, actual);
         }
@@ -80,9 +80,9 @@ namespace testing_restaurant
         public void Test5()
         {
             var newTable = new Table(11, 10);
-            Table.ListOfTables.Add(newTable);
-            var newOrder = new Order(OperationConsole.FindTable(11));
-            Order.ListOfOrders.Add(newOrder);
+            Table.ListOfTables.Add(OperationConsole.FindTable(11));
+            var newOrder = new Order(newTable);
+            Order.ListOfActiveOrders.Add(newOrder);
             var expected = newOrder;
             var actual = OrderOperations.FindOrder(11, out bool breaking);
             Assert.AreEqual(expected, actual);

@@ -101,18 +101,28 @@
 
                             break;
                         case 4:
-                            if (Order.ListOfOrders.Count != 0)
+                            if (Order.ListOfActiveOrders.Count != 0)
                             {
+                                Console.Clear();
                                 Console.WriteLine("Enter which table's order you would like to add to: ");
                                 OperationConsole.ValidateInput(Table.ListOfTables.Count, out menuOption, out result, out breaking);
-                                OrderOperations.AddToAnExistingOrder(OrderOperations.FindOrder(result, out breaking));
-                                OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                if (result != 0)
+                                {
+                                    OrderOperations.AddToAnExistingOrder(OrderOperations.FindOrder(result, out breaking));
+                                    OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                }
+                                else
+                                {
+                                    break;
+                                }
                             }
                             else
                             {
+                                Console.Clear();
                                 Console.WriteLine("There are no ongoing orders.");
                                 Console.ReadLine();
                             }
+                            
                             break;
                         case 5:
                             Console.Clear();
@@ -120,7 +130,7 @@
                             OperationConsole.GoBackToMenu(out menuOption, out choosing);
                             break;
                         case 6:
-                            if (Order.ListOfOrders.Count > 0)
+                            if (Order.ListOfActiveOrders.Count > 0)
                             {
                                 bool digitalReceipt = false;
                                 breaking = true;
@@ -141,6 +151,7 @@
                                     {
                                         while (!breaking)
                                         {
+                                            Console.Clear();
                                             Console.WriteLine("Would the customer like a receipt?            (Y/N)");
                                             string receipt = Console.ReadLine();
                                             if (string.IsNullOrEmpty(receipt.Trim()))
@@ -164,8 +175,7 @@
                                             }
                                             else
                                             {
-                                                Console.WriteLine("Incorrect input, try again. ");
-                                                break;
+                                                Console.WriteLine("Incorrect input, try again. ");                                                
                                             }
                                         }
                                     }
@@ -176,15 +186,16 @@
                                     }
                                     while (breaking && digitalReceipt)
                                     {
-                                        Console.WriteLine("Would the customer like a digital receipt? ");
+                                        Console.WriteLine("Would the customer like a digital receipt?      (Y/N)");
                                         string receipt = Console.ReadLine();
                                         if (string.IsNullOrEmpty(receipt.Trim()))
                                         {
                                             Console.WriteLine("Incorrect input, try again.");
                                         }
                                         else if (receipt.ToLower() == "n")
-                                        {
+                                        {                                       
                                             breaking = false;
+                                            Order.ListOfActiveOrders.Remove(order);
                                             break;
                                         }
                                         else if (receipt.ToLower() == "y")
@@ -193,16 +204,15 @@
                                             sendingMail.SendRestaurantReceipt(order, waiter);
                                             sendingMail.SendCustomerReceipt(order, waiter);
                                             breaking = false;
+                                            Order.ListOfActiveOrders.Remove(order);
                                             break;
                                         }
                                         else
                                         {
                                             Console.WriteLine("Incorrect input, try again. ");
-                                            break;
                                         }
                                     }
-                                    Order.ListOfActiveOrders.Remove(order);
-                                    OperationConsole.GoBackToMenu(out menuOption, out choosing);
+                                  OperationConsole.GoBackToMenu(out menuOption, out choosing);
                                 }
                             }
                             else
@@ -260,6 +270,45 @@
                             break;
 
                         case 9:
+                            if (Order.ListOfOrders.Count != 0)
+                            {
+                                breaking = true;
+                                while (breaking) 
+                                { 
+                                    Console.WriteLine("Would you like to look at finished the orders of today?    (Y/N)");
+                                    string ordersOfTheDay = Console.ReadLine();
+                                    if (string.IsNullOrEmpty(ordersOfTheDay.Trim()))
+                                    {
+                                        Console.WriteLine("Incorrect input, try again.");
+                                    }
+                                    else if (ordersOfTheDay.ToLower() == "n")
+                                    {
+                                        breaking = false;
+                                        break;
+                                    }
+                                    else if (ordersOfTheDay.ToLower() == "y")
+                                    {
+                                        Console.WriteLine($"There are {Order.ListOfActiveOrders.Count} ongoing orders");
+                                        if (Order.ListOfOrders.Count > Order.ListOfActiveOrders.Count)
+                                        {
+                                            Console.WriteLine("Finished orders:  ");
+                                            OrderOperations.ShowOrdersOfTheDay();
+                                            breaking = false;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("There were no finished orders today.");
+                                            breaking = false;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Incorrect input, try again. ");
+                                    }
+                                }
+                            }
                             Console.WriteLine("Goodbye!");
                             menuOption = false;
                             choosing = false;

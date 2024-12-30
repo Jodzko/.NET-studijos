@@ -10,7 +10,7 @@
 
         public static int SerialNumberGetter(string path)
         {
-            var read = Reader.FileReader(path);
+            var read = FileReader(path);
             var newSerialNumber = int.Parse(read[0]);
             return newSerialNumber;
         }

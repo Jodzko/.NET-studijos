@@ -35,6 +35,7 @@ namespace Projektas_Restoranas
         public static string PrintCustomerReceipt(Order order, Waiter waiter)
         {
             Console.Clear();
+            Console.WriteLine("\t\t\t\t Your receipt: ");
             var builder = new StringBuilder();
             builder.AppendLine($"{order.TimeWhenSatDown}");
             foreach (var item in order.Receipt)
