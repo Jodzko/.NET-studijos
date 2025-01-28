@@ -4,6 +4,10 @@
     {
         public static void OpenMenu()
         {
+            using var studentContext = new StudentContext();
+            var allStudents = studentContext.Students.ToList();
+            var allDepartments = studentContext.Departments.ToList();
+            var allLectures = studentContext.Lectures.ToList();
             var menuQuit = false;
             while (!menuQuit)
             {
@@ -25,30 +29,88 @@
                     case 1:
                         Console.Clear();
                         Console.WriteLine("What is the department name? : ");
-                        var answer = Console.ReadLine().Trim();
-                        DepartmentRepository.CreatingADepartment(answer);
+                        var department = Console.ReadLine().Trim();
+                        if (department != "0")
+                        {
+                            DepartmentRepository.CreatingADepartment(department);
+                        }
+                        else
+                        {
+                            break;
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 2:
                         Console.Clear();
-
+                        if (allStudents.Count() > 0 && allDepartments.Count() > 0)
+                        {
+                            DepartmentRepository.AddStudentWithNoDepartmentToDepartment();
+                        }
+                        else
+                        {
+                            Console.WriteLine("There is no student or department.");
+                            Console.ReadLine();
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 3:
                         Console.Clear();
-
+                        if (allStudents.Count() > 0 && allDepartments.Count() > 0)
+                        {
+                            var student = StudentRepository.FindStudentByNameOrId();
+                            if(student == null)
+                            {
+                                break;
+                            }
+                            else if(student != default)
+                            {
+                                var foundDepartment = DepartmentRepository.FindDepartmentByName();
+                                if(foundDepartment == null)
+                                {
+                                    break;
+                                }
+                                else if(foundDepartment != default)
+                                {
+                                    DepartmentRepository.ChangeStudentDepartment(foundDepartment, student);
+                                    studentContext.SaveChanges();
+                                }
+                            }                                                     
+                        }
+                        else
+                        {
+                            Console.WriteLine("There is no student or department.");
+                            Console.ReadLine();
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 4:
                         Console.Clear();
                         Console.WriteLine("What is the name of the lecture you want to create? :");
                         var lecture = Console.ReadLine().Trim();
-                        LectureRepository.CreatingALecture(lecture);
+                        if (lecture != "0")
+                        {
+                            LectureRepository.CreatingALecture(lecture);
+                        }
+                        else
+                        {
+                            break;
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 5:
                         Console.Clear();
-
+                        if (allLectures.Count() > 0 && allDepartments.Count() > 0)
+                        {
+                            DepartmentRepository.AddLectureToDepartment();
+                        }
+                        else if (allLectures.Count() < 1)
+                        {
+                            Console.WriteLine("There are no lectures in the database.");
+                        }
+                        else if (allDepartments.Count() < 1)
+                        {
+                            Console.WriteLine("There are no departments in the database.");
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 6:
@@ -57,33 +119,74 @@
                         var name = Console.ReadLine().Trim();
                         Console.WriteLine("What is the surname of the student? :");
                         var surname = Console.ReadLine().Trim();
-                        StudentRepository.CreatingAStudent(name, surname);
+                        if (name != "0" && surname != "0")
+                        {
+                            StudentRepository.CreatingAStudent(name, surname);
+                        }
+                        else
+                        {
+                            break;
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 7:
-                        Console.Clear();
-                        Console.WriteLine("What is the name of the department?");
-                        var department = Console.ReadLine().Trim();
-                        DepartmentRepository.ShowAllLecturesOfADepartment(department);
+                        Console.Clear();                       
+                        if (allDepartments.Count() > 0)
+                        {
+                            Console.WriteLine("What is the name of the department?");
+                            department = Console.ReadLine().Trim();
+                            if (department != "0")
+                            {
+                                DepartmentRepository.ShowAllLecturesOfADepartment(department);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("There are no departments in the database.");
+                            Console.ReadLine();
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 8:
                         Console.Clear();
-                        Console.WriteLine("What is the name of the department?");
-                        department = Console.ReadLine().Trim();
-                        DepartmentRepository.ShowAllStudentsOfADepartment(department);
+                        if (allDepartments.Count() > 0)
+                        {
+                            Console.WriteLine("What is the name of the department?");
+                            department = Console.ReadLine().Trim();
+                            if (department != "0")
+                            {
+                                DepartmentRepository.ShowAllStudentsOfADepartment(department);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("There are no departments in the database.");
+                            Console.ReadLine();
+                        }
                         GoBackToMenu(out menuQuit);
                         break;
                     case 9:
                         Console.Clear();
-                        Console.WriteLine("What is the name of the student? :");
-                        name = Console.ReadLine().Trim();
-                        Console.WriteLine("What is the surname of the student? :");
-                        surname = Console.ReadLine().Trim();
-                        var foundStudent = StudentRepository.FindStudentInDatabase(name, surname);
-                        if (foundStudent != default)
+                        if (allStudents.Count() > 0)
                         {
-                            StudentRepository.ShowAllLecturesOfStudent(foundStudent);
+                            var student = StudentRepository.FindStudentByNameOrId();
+                            if (student != default)
+                            {
+                                StudentRepository.ShowAllLecturesOfStudent(student);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("There are no students in the database.");
+                            Console.ReadLine();
                         }
                         GoBackToMenu(out menuQuit);
                         break;

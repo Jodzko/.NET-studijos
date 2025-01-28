@@ -4,7 +4,7 @@
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<Department> Departments { get; set; } = [];
+        public List<Department> Department { get; set; } = [];
         public List<Student> Students { get; set; } = [];
 
 
