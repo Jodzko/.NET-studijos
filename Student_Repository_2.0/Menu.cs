@@ -1,15 +1,16 @@
-﻿namespace DB_Atsiskaitymas
+﻿using Student_Repository_2._0;
+using System.Collections.Generic;
+
+namespace DB_Atsiskaitymas
 {
     public class Menu
     {
-            StudentContext studentContext = new StudentContext();
-
-    public static void OpenMenu()
+        public void OpenMenu()
         {
-            using var studentContext = new StudentContext();
-            //var allStudents = studentContext.Students.ToList();
-            //var allDepartments = studentContext.Departments.ToList();
-            //var allLectures = studentContext.Lectures.ToList();
+            using var context = new StudentContext();
+            var studentRepository = new StudentRepository(context);
+            var lectureRepository = new LectureRepository(context);
+            var departmentRepository = new DepartmentRepository(context);            
             var menuQuit = false;
             while (!menuQuit)
             {
@@ -34,7 +35,7 @@
                         var department = Console.ReadLine().Trim();
                         if (department != "0")
                         {
-                            DepartmentRepository.CreatingADepartment(department);
+                            departmentRepository.CreatingADepartment(department);
                         }
                         else
                         {
@@ -44,12 +45,11 @@
                         break;
                     case 2:
                         Console.Clear();
-                        var allLectures = studentContext.Lectures.ToList();
-                        var allDepartments = studentContext.Departments.ToList();
-                        var allStudents = studentContext.Students.ToList();
+                        var allStudents = studentRepository.GetAllStudents();
+                        var allDepartments = departmentRepository.GetAllDepartments();
                         if (allStudents.Count() > 0 && allDepartments.Count() > 0)
                         {
-                            DepartmentRepository.AddStudentWithNoDepartmentToDepartment();
+                            departmentRepository.AddStudentWithNoDepartmentToDepartment();
                         }
                         else
                         {
@@ -60,29 +60,27 @@
                         break;
                     case 3:
                         Console.Clear();
-                        allLectures = studentContext.Lectures.ToList();
-                        allDepartments = studentContext.Departments.ToList();
-                        allStudents = studentContext.Students.ToList();
+                        allStudents = studentRepository.GetAllStudents();
+                        allDepartments = departmentRepository.GetAllDepartments();
                         if (allStudents.Count() > 0 && allDepartments.Count() > 0)
                         {
-                            var student = StudentRepository.FindStudentByNameOrId();
-                            if(student == null)
+                            var student = studentRepository.FindStudentByNameOrId();
+                            if (student == null)
                             {
                                 break;
                             }
-                            else if(student != default)
+                            else if (student != default)
                             {
-                                var foundDepartment = DepartmentRepository.FindDepartmentByName();
-                                if(foundDepartment == null)
+                                var foundDepartment = departmentRepository.FindDepartmentByName();
+                                if (foundDepartment == null)
                                 {
                                     break;
                                 }
-                                else if(foundDepartment != default)
+                                else if (foundDepartment != default)
                                 {
-                                    DepartmentRepository.ChangeStudentDepartment(foundDepartment, student);
-                                    studentContext.SaveChanges();
+                                    departmentRepository.ChangeStudentDepartment(foundDepartment, student);
                                 }
-                            }                                                     
+                            }
                         }
                         else
                         {
@@ -97,7 +95,7 @@
                         var lecture = Console.ReadLine().Trim();
                         if (lecture != "0")
                         {
-                            LectureRepository.CreatingALecture(lecture);
+                            lectureRepository.CreatingALecture(lecture);
                         }
                         else
                         {
@@ -107,12 +105,11 @@
                         break;
                     case 5:
                         Console.Clear();
-                        allLectures = studentContext.Lectures.ToList();
-                        allDepartments = studentContext.Departments.ToList();
-                        allStudents = studentContext.Students.ToList();
+                        allDepartments = departmentRepository.GetAllDepartments();
+                        var allLectures = lectureRepository.GetAllLectures();
                         if (allLectures.Count() > 0 && allDepartments.Count() > 0)
                         {
-                            DepartmentRepository.AddLectureToDepartment();
+                            departmentRepository.AddLectureToDepartment(lectureRepository);
                         }
                         else if (allLectures.Count() < 1)
                         {
@@ -132,7 +129,7 @@
                         var surname = Console.ReadLine().Trim();
                         if (name != "0" && surname != "0")
                         {
-                            StudentRepository.CreatingAStudent(name, surname);
+                            studentRepository.CreatingAStudent(name, surname);
                         }
                         else
                         {
@@ -142,16 +139,14 @@
                         break;
                     case 7:
                         Console.Clear();
-                        allLectures = studentContext.Lectures.ToList();
-                        allDepartments = studentContext.Departments.ToList();
-                        allStudents = studentContext.Students.ToList();
+                        allDepartments = departmentRepository.GetAllDepartments();
                         if (allDepartments.Count() > 0)
                         {
                             Console.WriteLine("What is the name of the department?");
                             department = Console.ReadLine().Trim();
                             if (department != "0")
                             {
-                                DepartmentRepository.ShowAllLecturesOfADepartment(department);
+                                departmentRepository.ShowAllLecturesOfADepartment(department);
                             }
                             else
                             {
@@ -167,16 +162,14 @@
                         break;
                     case 8:
                         Console.Clear();
-                        allLectures = studentContext.Lectures.ToList();
-                        allDepartments = studentContext.Departments.ToList();
-                        allStudents = studentContext.Students.ToList();
+                        allDepartments = departmentRepository.GetAllDepartments();
                         if (allDepartments.Count() > 0)
                         {
                             Console.WriteLine("What is the name of the department?");
                             department = Console.ReadLine().Trim();
                             if (department != "0")
                             {
-                                DepartmentRepository.ShowAllStudentsOfADepartment(department);
+                                departmentRepository.ShowAllStudentsOfADepartment(department);
                             }
                             else
                             {
@@ -191,16 +184,14 @@
                         GoBackToMenu(out menuQuit);
                         break;
                     case 9:
-                        allLectures = studentContext.Lectures.ToList();
-                        allDepartments = studentContext.Departments.ToList();
-                        allStudents = studentContext.Students.ToList();
                         Console.Clear();
+                        allStudents = studentRepository.GetAllStudents();
                         if (allStudents.Count() > 0)
                         {
-                            var student = StudentRepository.FindStudentByNameOrId();
+                            var student = studentRepository.FindStudentByNameOrId();
                             if (student != default)
                             {
-                                StudentRepository.ShowAllLecturesOfStudent(student);
+                                studentRepository.ShowAllLecturesOfStudent(student);
                             }
                         }
                         else
@@ -221,7 +212,7 @@
         {
             Console.WriteLine("Do you want to go back to the menu?      (Y/N)");
             var answer = Validation.YesOrNo();
-            if(answer == "Y")
+            if (answer == "Y")
             {
                 menuQuit = false;
             }

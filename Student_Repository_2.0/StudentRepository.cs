@@ -3,14 +3,17 @@ using System.Xml.Linq;
 
 namespace DB_Atsiskaitymas
 {
-    public static class StudentRepository
+    public class StudentRepository
     {
-        
-        public static void CreatingAStudent(string name, string surname)
+        StudentContext studentContext { get; set; }
+        public StudentRepository(StudentContext context)
+        {
+            studentContext = context;
+        }
+        public void CreatingAStudent(string name, string surname)
         {
             Console.Clear();
             var newStudent = new Student(name, surname);
-            using var studentContext = new StudentContext();
             var foundStudent = studentContext.Students
                 .FirstOrDefault(x => x.Name == name && x.Surname == surname);
             var allStudents = studentContext.Students
@@ -18,55 +21,55 @@ namespace DB_Atsiskaitymas
             var allDepartments = studentContext.Departments
                 .Include(x => x.Lectures)
                 .ToList();
-            if(foundStudent == default)
+            if (foundStudent == default)
             {
                 foreach (var item in allDepartments)
                 {
-                        Console.Clear();  
-                        Console.WriteLine($"Do you want to add {newStudent.Name} to the {item.Name} department?     (Y/N)");
-                        var answer = Validation.YesOrNo();
-                        if(answer == "Y")
+                    Console.Clear();
+                    Console.WriteLine($"Do you want to add {newStudent.Name} to the {item.Name} department?     (Y/N)");
+                    var answer = Validation.YesOrNo();
+                    if (answer == "Y")
+                    {
+                        newStudent.Department = item;
+                        newStudent.DepartmentId = item.Id;
+                        newStudent.Lectures = item.Lectures;
+                        break;
+                    }
+                    else if (answer == "N")
+                    {
+                        newStudent.Department = null;
+                        newStudent.DepartmentId = null;
+                        newStudent.Lectures = null;
+                        continue;
+                    }
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("There is a student with the same credentials in the system, are you sure you want to add a new student?      (Y/N)");
+                var answer = Validation.YesOrNo();
+                if (answer == "Y")
+                {
+                    foreach (var item in allDepartments)
+                    {
+                        Console.Clear();
+                        Console.WriteLine($"Do you want to add {newStudent.Name} to the {item.Name} department?");
+                        answer = Validation.YesOrNo();
+                        if (answer == "Y")
                         {
                             newStudent.Department = item;
                             newStudent.DepartmentId = item.Id;
                             newStudent.Lectures = item.Lectures;
                             break;
                         }
-                        else if(answer == "N")
-                        {
-                            newStudent.Department = null;
-                            newStudent.DepartmentId = null;
-                            newStudent.Lectures = null;
-                            continue;
-                        }
-                }
-            }
-            else
-            {
-                    Console.Clear();
-                    Console.WriteLine("There is a student with the same credentials in the system, are you sure you want to add a new student?      (Y/N)");
-                    var answer = Validation.YesOrNo();                    
-                if (answer == "Y")
-                    {
-                        foreach (var item in allDepartments)
-                        {
-                                Console.Clear();
-                                Console.WriteLine($"Do you want to add {newStudent.Name} to the {item.Name} department?");
-                                answer = Validation.YesOrNo();
-                                if (answer == "Y")
-                                {
-                                    newStudent.Department = item;
-                                    newStudent.DepartmentId = item.Id;
-                                    newStudent.Lectures = item.Lectures;
-                                    break;
-                                }
-                        }
                     }
+                }
             }
             studentContext.Students.Add(newStudent);
             studentContext.SaveChanges();
         }
-        public static void ShowAllLecturesOfStudent(Student student)
+        public void ShowAllLecturesOfStudent(Student student)
         {
             var lecturesOfStudent = student.Lectures.ToList();
             if (student == default)
@@ -79,24 +82,22 @@ namespace DB_Atsiskaitymas
             }
             else
             {
-                var studentContext = new StudentContext();
                 var studentInDatabase = studentContext.Students
                     .Include(x => x.Lectures)
                     .FirstOrDefault(x => student.Id == x.Id);
-                    Console.WriteLine("The lectures that this student is attending: ");
-                    lecturesOfStudent = studentInDatabase.Lectures.ToList();
-                    foreach (var item in lecturesOfStudent)
-                    {
-                        Console.WriteLine(item.Name);
-                    }              
+                Console.WriteLine("The lectures that this student is attending: ");
+                lecturesOfStudent = studentInDatabase.Lectures.ToList();
+                foreach (var item in lecturesOfStudent)
+                {
+                    Console.WriteLine(item.Name);
+                }
             }
 
 
         }
 
-        public static Student FindStudentInDatabaseByName(string name, string surname)
+        public Student FindStudentInDatabaseByName(string name, string surname)
         {
-            using var studentContext = new StudentContext();
             if (name == "0" || surname == "0")
             {
                 return default;
@@ -119,9 +120,8 @@ namespace DB_Atsiskaitymas
             }
         }
 
-        public static Student FindStudentInDatabaseByID(string studentId)
+        public Student FindStudentInDatabaseByID(string studentId)
         {
-            using var studentContext = new StudentContext();
             try
             {
                 var student = studentContext.Students
@@ -138,14 +138,14 @@ namespace DB_Atsiskaitymas
                     return student;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
             return default;
         }
 
-        public static Student FindStudentByNameOrId()
+        public Student FindStudentByNameOrId()
         {
             var choosing = false;
             while (!choosing)
@@ -181,5 +181,11 @@ namespace DB_Atsiskaitymas
             }
             return default;
         }
+
+        public List<Student> GetAllStudents()
+        {
+            return studentContext.Students.ToList();
+        }
     }
 }
+

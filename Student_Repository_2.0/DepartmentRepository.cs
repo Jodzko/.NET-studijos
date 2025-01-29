@@ -1,26 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
+﻿using DB_Atsiskaitymas;
+using Microsoft.EntityFrameworkCore;
 
-namespace DB_Atsiskaitymas
+namespace Student_Repository_2._0
 {
-    public static class DepartmentRepository
-    {       
-        public static void CreatingADepartment(string name)
+    public class DepartmentRepository
+    {
+        StudentContext studentContext { get; set; }
+        public DepartmentRepository(StudentContext context)
+        {
+            studentContext = context;
+        }
+        
+        public void CreatingADepartment(string name)
         {
             var departmentFound = false;
-            using var studentContext = new StudentContext();
             var allStudents = studentContext.Students.ToList();
             var allDepartments = studentContext.Departments.ToList();
             var allLectures = studentContext.Lectures.ToList();
             foreach (var department in allDepartments)
             {
-                if(department.Name == name)
+                if (department.Name == name)
                 {
                     Console.WriteLine("That department already exists in the database.");
                     Console.ReadLine();
                     departmentFound = true;
                     break;
-                }                 
+                }
             }
             if (!departmentFound)
             {
@@ -40,32 +45,34 @@ namespace DB_Atsiskaitymas
                         }
                     }
                 }
-                if (allStudents.Count() > 0) 
-                { 
-                foreach (var student in allStudents)
+                if (allStudents.Count() > 0)
                 {
-                    Console.Clear();
-                    if (student.Department == default)
+                    foreach (var student in allStudents)
                     {
-                        Console.WriteLine($"Do you want to add {student.Name} {student.Surname} to this department?     (Y/N)");
-                        var answer = Validation.YesOrNo();
-                        if (answer == "Y")
+                        Console.Clear();
+                        if (student.Department == default)
                         {
-                            ChangeStudentDepartment(newDepartment, student);
-                            continue;
+                            Console.WriteLine($"Do you want to add {student.Name} {student.Surname} to this department?     (Y/N)");
+                            var answer = Validation.YesOrNo();
+                            if (answer == "Y")
+                            {
+                                ChangeStudentDepartment(newDepartment, student);
+                                continue;
+                            }
                         }
                     }
                 }
-            }
                 studentContext.Departments.Add(newDepartment);
                 studentContext.SaveChanges();
                 Console.WriteLine("Department succesfully added.");
                 Console.ReadLine();
             }
         }
-        public static void ChangeStudentDepartment(Department department, Student student)
+        public void ChangeStudentDepartment(Department department, Student student)
         {
-            using var studentContext = new StudentContext();
+            var allStudents = studentContext.Students.ToList();
+            var allDepartments = studentContext.Departments.ToList();
+            var allLectures = studentContext.Lectures.ToList();
             if (department != default && student != default)
             {
                 if (student.DepartmentId != department.Id && student.DepartmentId != null)
@@ -74,9 +81,9 @@ namespace DB_Atsiskaitymas
                     student.Department = department;
                     student.Lectures = department.Lectures;
                     Console.WriteLine($"{student.Name} succesfully added to {department.Name}");
-                    //studentContext.SaveChanges();
+                    studentContext.SaveChanges();
                 }
-                else if(student.DepartmentId == null)
+                else if (student.DepartmentId == null)
                 {
                     Console.WriteLine("This student does not have a department, try adding him to a department first.");
                 }
@@ -85,7 +92,7 @@ namespace DB_Atsiskaitymas
                     Console.WriteLine("This student is already in this department.");
                 }
             }
-            else if(department == default)
+            else if (department == default)
             {
                 Console.WriteLine("There is no department with that name.");
             }
@@ -94,15 +101,14 @@ namespace DB_Atsiskaitymas
                 Console.WriteLine("There is no such student in the database.");
             }
         }
-        public static void ShowAllStudentsOfADepartment(string name)
-        {
-            using var studentContext = new StudentContext();
+        public void ShowAllStudentsOfADepartment(string name)
+        {            
             var department = studentContext.Departments
                 .Include(x => x.Students)
                 .FirstOrDefault(x => x.Name == name);
             var studentsOfDepartment = department.Students.ToList();
             Console.Clear();
-            if (department != default && studentsOfDepartment.Count() > 0) 
+            if (department != default && studentsOfDepartment.Count() > 0)
             {
                 Console.WriteLine("Students in this department: ");
                 foreach (var student in studentsOfDepartment)
@@ -111,21 +117,20 @@ namespace DB_Atsiskaitymas
                 }
                 Console.ReadLine();
             }
-            else if(department == default)
+            else if (department == default)
             {
                 Console.WriteLine("There is no department with that name.");
                 Console.ReadLine();
             }
-            else if(department.Students.Count() < 1)
+            else if (department.Students.Count() < 1)
             {
                 Console.WriteLine("There are no students in this department.");
                 Console.ReadLine();
             }
         }
 
-        public static void ShowAllLecturesOfADepartment(string name)
+        public void ShowAllLecturesOfADepartment(string name)
         {
-            using var studentContext = new StudentContext();
             var department = studentContext.Departments
                 .Include(x => x.Lectures)
                 .FirstOrDefault(x => x.Name == name);
@@ -140,22 +145,21 @@ namespace DB_Atsiskaitymas
                 }
                 Console.ReadLine();
             }
-            else if(department == default)
+            else if (department == default)
             {
                 Console.WriteLine("There is no department with that name.");
                 Console.ReadLine();
             }
-            else if(lecturesOfDepartment.Count() < 1)
+            else if (lecturesOfDepartment.Count() < 1)
             {
                 Console.WriteLine("There are no lectures in this department");
                 Console.ReadLine();
             }
         }
 
-        public static Department FindDepartmentByName()
+        public Department FindDepartmentByName()
         {
             Console.Clear();
-            using var studentContext = new StudentContext();
             Console.WriteLine("What is the department name? :");
             var department = Console.ReadLine().Trim().ToUpper();
             var foundDepartment = studentContext.Departments
@@ -175,25 +179,24 @@ namespace DB_Atsiskaitymas
             return default;
         }
 
-        public static void AddLectureToDepartment()
+        public void AddLectureToDepartment(LectureRepository lectureRepository)
         {
-            using var studentContext = new StudentContext();
             var department = FindDepartmentByName();
-            if(department != default)
+            if (department != default)
             {
-                var lecture = LectureRepository.FindLectureByName();
-                if(lecture != default)
+
+                var lecture = lectureRepository.FindLectureByName();
+                if (lecture != default)
                 {
                     department.Lectures.Add(lecture);
                     studentContext.SaveChanges();
                 }
             }
-            
+
         }
 
-        public static void AddStudentWithNoDepartmentToDepartment()
+        public void AddStudentWithNoDepartmentToDepartment()
         {
-            using var studentContext = new StudentContext();
             var allStudentsWithNoDepartment = studentContext.Students.Where(x => x.DepartmentId == null)
                 .ToList();
             if (allStudentsWithNoDepartment.Count() > 0)
@@ -202,8 +205,8 @@ namespace DB_Atsiskaitymas
                 var choice = Console.ReadLine().Trim().ToUpper();
                 var department = studentContext.Departments
                     .Include(x => x.Lectures)
-                    .FirstOrDefault(x => x.Name.ToUpper() == choice); 
-                if(department != default) 
+                    .FirstOrDefault(x => x.Name.ToUpper() == choice);
+                if (department != default)
                 {
                     foreach (var student in allStudentsWithNoDepartment)
                     {
@@ -236,6 +239,10 @@ namespace DB_Atsiskaitymas
                 Console.WriteLine("There are no students without a department. Try changing the department of existing students.");
             }
         }
+
+        public List<Department> GetAllDepartments()
+        {
+            return studentContext.Departments.ToList();
         }
     }
-
+}

@@ -10,10 +10,8 @@ namespace DB_Atsiskaitymas
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlServer($"Data Source=.;Server=localhost\\SQLEXPRESS;Database=StudentDatabase;Trusted_Connection=True;")
+            options.UseSqlServer($"Data Source=.;Server=localhost\\SQLEXPRESS;Database=Student_DB_2.0;Trusted_Connection=True;")
             .EnableSensitiveDataLogging();
         }
-
-
     }
 }

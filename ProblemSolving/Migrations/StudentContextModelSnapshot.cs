@@ -4,16 +4,14 @@ using DB_Atsiskaitymas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace DB_Atsiskaitymas.Migrations
+namespace ProblemSolving.Migrations
 {
     [DbContext(typeof(StudentContext))]
-    [Migration("20250128150325_updatingDatabase")]
-    partial class updatingDatabase
+    partial class StudentContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

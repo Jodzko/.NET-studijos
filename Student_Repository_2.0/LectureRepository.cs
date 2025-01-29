@@ -2,16 +2,20 @@
 
 namespace DB_Atsiskaitymas
 {
-    public static class LectureRepository
+    public class LectureRepository
     {
-        public static void CreatingALecture(string name)
+        StudentContext studentContext { get; set; }
+        public LectureRepository(StudentContext context)
+        {
+            studentContext = context;
+        }
+        public void CreatingALecture(string name)
         {
             Console.Clear();
-            using var studentContext = new StudentContext();
             var foundLecture = studentContext.Lectures.FirstOrDefault(x => x.Name == name);
             var allDepartments = studentContext.Departments.ToList();
             var allLectures = studentContext.Lectures.ToList();
-            if(foundLecture == default)
+            if (foundLecture == default)
             {
                 var newLecture = new Lecture(name);
                 foreach (var item in allDepartments)
@@ -41,16 +45,15 @@ namespace DB_Atsiskaitymas
             }
         }
 
-        public static Lecture FindLectureByName()
+        public Lecture FindLectureByName()
         {
             Console.Clear();
-            using var studentContext = new StudentContext();
             Console.WriteLine("What is the name of the Lecture? : ");
             var input = Console.ReadLine().Trim().ToUpper();
             var lecture = studentContext.Lectures
                 .Include(x => x.Department)
                 .FirstOrDefault(x => x.Name == input);
-            if(lecture == default)
+            if (lecture == default)
             {
                 Console.WriteLine("There is no lecture with that name.");
                 Console.WriteLine();
@@ -60,6 +63,11 @@ namespace DB_Atsiskaitymas
             {
                 return lecture;
             }
+        }
+
+        public List<Lecture> GetAllLectures()
+        {
+            return studentContext.Lectures.ToList();
         }
     }
 }
