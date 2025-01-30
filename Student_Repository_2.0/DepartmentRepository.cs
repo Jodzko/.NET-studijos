@@ -182,14 +182,30 @@ namespace Student_Repository_2._0
         public void AddLectureToDepartment(LectureRepository lectureRepository)
         {
             var department = FindDepartmentByName();
+            var lecturesInDepartment = department.Lectures.ToList();
+            var allLectures = studentContext.Lectures.ToList();
             if (department != default)
             {
-
-                var lecture = lectureRepository.FindLectureByName();
-                if (lecture != default)
+                if (lecturesInDepartment.Count() < allLectures.Count())
                 {
-                    department.Lectures.Add(lecture);
-                    studentContext.SaveChanges();
+                    var lecture = lectureRepository.FindLectureByName();                   
+                    if (lecture != default)
+                    {
+                        if (lecturesInDepartment.Contains(lecture))
+                        {
+                            Console.WriteLine("This department already has this lecture.");
+                        }
+                        else
+                        {
+                            department.Lectures.Add(lecture);
+                            studentContext.SaveChanges();
+                            Console.WriteLine($"{lecture.Name} succesfully added to {department.Name}");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("This department has all the lectures in the database.");
                 }
             }
 
@@ -243,6 +259,24 @@ namespace Student_Repository_2._0
         public List<Department> GetAllDepartments()
         {
             return studentContext.Departments.ToList();
+        }
+
+        public void ShowAllDepartments()
+        {
+            Console.Clear();
+            var allDepartments = GetAllDepartments();
+            if (allDepartments.Count() == 0)
+            {
+                Console.WriteLine("There are no departments in the database.");
+            }
+            else
+            {
+                Console.WriteLine("All departments in the database: ");
+                foreach (var department in allDepartments)
+                {
+                    Console.WriteLine(department.Name);
+                }
+            }
         }
     }
 }

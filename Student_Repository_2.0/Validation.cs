@@ -33,7 +33,7 @@
             while (!choosing)
             {
                 var input = int.TryParse(Console.ReadLine().Trim(), out int choice);
-                if (choice > 0 && choice < 11)
+                if (choice > 0 && choice < 14)
                 {
                     return choice;
                 }

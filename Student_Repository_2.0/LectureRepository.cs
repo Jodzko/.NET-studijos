@@ -14,15 +14,12 @@ namespace DB_Atsiskaitymas
             Console.Clear();
             var foundLecture = studentContext.Lectures.FirstOrDefault(x => x.Name == name);
             var allDepartments = studentContext.Departments.ToList();
-            var allLectures = studentContext.Lectures.ToList();
             if (foundLecture == default)
             {
                 var newLecture = new Lecture(name);
+                studentContext.Lectures.Add(newLecture);
                 foreach (var item in allDepartments)
                 {
-
-                    if (allLectures.Count() > 0)
-                    {
                         Console.Clear();
                         Console.WriteLine($"Do you want to add the {name} lecture to the {item.Name} department?      (Y/N)");
                         var answer = Validation.YesOrNo();
@@ -33,9 +30,7 @@ namespace DB_Atsiskaitymas
                             Console.WriteLine("Lecture added succesfully.");
                             continue;
                         }
-                    }
                 }
-                studentContext.Lectures.Add(newLecture);
                 studentContext.SaveChanges();
             }
             else
@@ -68,6 +63,24 @@ namespace DB_Atsiskaitymas
         public List<Lecture> GetAllLectures()
         {
             return studentContext.Lectures.ToList();
+        }
+
+        public void ShowAllLectures()
+        {
+            Console.Clear();
+            var allLectures = GetAllLectures();
+            if (allLectures.Count() == 0)
+            {
+                Console.WriteLine("There are no lectures in the database.");
+            }
+            else
+            {
+                Console.WriteLine("All the lectures in the database: ");
+                foreach (var lecture in allLectures)
+                {
+                    Console.WriteLine(lecture.Name);
+                }
+            }
         }
     }
 }

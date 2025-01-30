@@ -186,6 +186,24 @@ namespace DB_Atsiskaitymas
         {
             return studentContext.Students.ToList();
         }
+
+        public void ShowAllStudents()
+        {
+            Console.Clear();
+            var allStudents = GetAllStudents();
+            if (allStudents.Count() == 0)
+            {
+                Console.WriteLine("There are no students in the database.");
+            }
+            else
+            {
+                Console.WriteLine("All students in the database: ");
+                foreach (var student in allStudents)
+                {
+                    Console.WriteLine(student.Name);
+                }
+            }
+        }
     }
 }
 

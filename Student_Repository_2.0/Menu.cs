@@ -25,7 +25,10 @@ namespace DB_Atsiskaitymas
                 Console.WriteLine("7. Show all lectures of a department.");
                 Console.WriteLine("8. Show all students of a department.");
                 Console.WriteLine("9. Show all lectures of a student.");
-                Console.WriteLine("10. Exit menu");
+                Console.WriteLine("10. Show all lectures in the database.");
+                Console.WriteLine("11. Show all students in the database.");
+                Console.WriteLine("12. Show all departments in the database.");
+                Console.WriteLine("13. Exit menu");
                 var choice = Validation.MenuInput();
                 switch (choice)
                 {
@@ -202,6 +205,18 @@ namespace DB_Atsiskaitymas
                         GoBackToMenu(out menuQuit);
                         break;
                     case 10:
+                        lectureRepository.ShowAllLectures();
+                        GoBackToMenu(out menuQuit);
+                        break;
+                    case 11:
+                        studentRepository.ShowAllStudents();
+                        GoBackToMenu(out menuQuit);
+                        break;
+                    case 12:
+                        departmentRepository.ShowAllDepartments();
+                        GoBackToMenu(out menuQuit);
+                        break;
+                    case 13:
                         menuQuit = true;
                         break;
                 }
