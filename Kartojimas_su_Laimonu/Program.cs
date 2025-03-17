@@ -8,9 +8,9 @@ var orderItemRepository = new OrderItemRepository(dbContext);
 var studentRepository = new StudentRepository(dbContext);
 
 //orderRepository.Save(new Order());
-orderRepository.Find(x => x.DateCreated == new DateTime());
-orderItemRepository.GetAll();
-orderItemRepository.GetById(1);
+//orderRepository.Find(x => x.DateCreated == new DateTime());
+//orderItemRepository.GetAll();
+//orderItemRepository.GetById(1);
 
 //var newStudent = new Student("Jonas", "Jonauskas");
 //studentRepository.Save(newStudent);
