@@ -1,0 +1,6 @@
+@_2_paskaita_DI_IOC_HostAddress = http://localhost:5001
+
+GET {{_2_paskaita_DI_IOC_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
