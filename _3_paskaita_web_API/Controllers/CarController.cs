@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using _3_paskaita_web_API.Models;
+using _3_paskaita_web_API.Persistence;
+using _3_paskaita_web_API.Requests;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _3_paskaita_web_API.Controllers
@@ -8,34 +11,37 @@ namespace _3_paskaita_web_API.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarDatabase _carDatabase;
-        
-        public CarController(ICarDatabase cardatabase)
+        private readonly ILogger<CarController> _logger;
+
+        public CarController(ICarDatabase cardatabase, ILogger<CarController> logger)
         {
+            _logger = logger;
             _carDatabase = cardatabase;
         }
 
         [HttpPost]
-        public ActionResult AddCar([FromBody] Car car)
+        public ActionResult AddCar([FromBody] CarRequest request)
         {
-            _carDatabase.AddCar(car);
+            _carDatabase.AddCar(request);
             return Ok();
         }
 
         [HttpGet]
         public ActionResult GetCars()
         {
+            _logger.LogWarning("Something went wrong");
             return Ok(_carDatabase.Cars());
         }
 
-        [HttpGet("byColor")]
+        [HttpGet("Color")]
         public ActionResult ByColor([FromQuery] string color)
         {
             return Ok(_carDatabase.ByColor(color));
         }
         [HttpPut]
-        public ActionResult Update([FromQuery] Guid id, [FromBody] Car car)
+        public ActionResult Update([FromBody] CarRequest request, [FromQuery] Guid id)
         {
-            _carDatabase.Update(id, car);
+            _carDatabase.Update(request, id);
             return Ok();
         }
         [HttpDelete]

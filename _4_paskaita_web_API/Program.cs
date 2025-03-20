@@ -1,8 +1,5 @@
 
-using _3_paskaita_web_API.Persistence;
-using Microsoft.EntityFrameworkCore;
-
-namespace _3_paskaita_web_API
+namespace _4_paskaita_web_API
 {
     public class Program
     {
@@ -17,10 +14,6 @@ namespace _3_paskaita_web_API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<CarDbContext>(options => options.UseSqlServer(connectionString));
-            builder.Services.AddScoped<ICarDatabase, CarDatabase>();
-            //builder.Services.AddSingleton<ICarDatabase, CarDatabase>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
