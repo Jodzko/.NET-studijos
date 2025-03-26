@@ -1,0 +1,6 @@
+@_5_paskaita_web_API_HostAddress = http://localhost:5192
+
+GET {{_5_paskaita_web_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
