@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace _3_paskaita_web_API.Migrations
+namespace _5_paskaita_web_API.Migrations
 {
     /// <inheritdoc />
     public partial class initial : Migration
@@ -12,16 +12,16 @@ namespace _3_paskaita_web_API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cars",
+                name: "Weathers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Model = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Color = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    City = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AddedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AllData = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.PrimaryKey("PK_Weathers", x => x.City);
                 });
         }
 
@@ -29,7 +29,7 @@ namespace _3_paskaita_web_API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cars");
+                name: "Weathers");
         }
     }
 }

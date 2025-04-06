@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using _3_paskaita_web_API.Persistence;
+using _5_paskaita_web_API.Persistence;
 
 #nullable disable
 
-namespace _3_paskaita_web_API.Migrations
+namespace _5_paskaita_web_API.Migrations
 {
-    [DbContext(typeof(CarDbContext))]
-    partial class CarDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(WeatherDbContext))]
+    partial class WeatherDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -22,23 +22,21 @@ namespace _3_paskaita_web_API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("_3_paskaita_web_API.Models.Car", b =>
+            modelBuilder.Entity("_5_paskaita_web_API.Models.WeatherData", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Color")
+                    b.Property<DateTime>("AddedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("AllData")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("City");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Cars");
+                    b.ToTable("Weathers");
                 });
 #pragma warning restore 612, 618
         }

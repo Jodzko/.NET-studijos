@@ -1,7 +1,9 @@
 
+using _5_paskaita_web_API.Persistence;
 using _5_paskaita_web_API.Services;
 using _5_paskaita_web_API.Services.Interfaces;
 using _5_paskaita_web_API.Settings;
+using Microsoft.EntityFrameworkCore;
 
 namespace _5_paskaita_web_API
 {
@@ -28,8 +30,11 @@ namespace _5_paskaita_web_API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IWeatherService, WeatherService>();
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.Configure<WeatherSettings>(builder.Configuration.GetSection("WeatherSettings"));
+            builder.Services.AddScoped<IWeatherService, WeatherService>();
+            builder.Services.AddDbContext<WeatherDbContext>(options => options.UseSqlServer(connectionString));
+            //builder.Services.AddTransient<IWeatherDatabase, WeatherDatabase>();
 
             var app = builder.Build();
 
