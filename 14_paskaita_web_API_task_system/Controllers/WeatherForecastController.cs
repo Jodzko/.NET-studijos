@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace _5_paskaita_web_API.Controllers
+namespace _14_paskaita_web_API_task_system.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -18,7 +18,6 @@ namespace _5_paskaita_web_API.Controllers
             _logger = logger;
         }
 
-        [ApiKeyAuth]
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {

@@ -1,0 +1,6 @@
+@_13_paskaita_web_API_ApiKey_HostAddress = http://localhost:5262
+
+GET {{_13_paskaita_web_API_ApiKey_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

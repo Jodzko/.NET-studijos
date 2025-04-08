@@ -1,6 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace _5_paskaita_web_API.Controllers
+namespace _13_paskaita_web_API_ApiKey.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -12,13 +13,14 @@ namespace _5_paskaita_web_API.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        //private readonly WeatherSettings _settings;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger)
         {
+            //_settings = settings;
             _logger = logger;
         }
 
-        [ApiKeyAuth]
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
@@ -29,6 +31,21 @@ namespace _5_paskaita_web_API.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+        [HttpGet("ExternalCall")]
+        public async Task<ActionResult> GetWeather(string city)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("ApiKey", "SomethingGoesHere");
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://localhost:7297/api/MyWeather")
+            };
+            using var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            var body = await response.Content.ReadAsStringAsync();
+            return Ok(body);
         }
     }
 }

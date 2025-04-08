@@ -12,7 +12,7 @@ namespace _5_paskaita_web_API.Services
     public class WeatherService : IWeatherService
     {
         private readonly WeatherSettings _weatherSettings;
-        public readonly WeatherDbContext _context;
+        private readonly WeatherDbContext _context;
 
         public WeatherService(IOptions<WeatherSettings> weatherSettings, WeatherDbContext context)
         {

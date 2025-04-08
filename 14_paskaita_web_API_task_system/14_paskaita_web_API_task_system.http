@@ -1,0 +1,6 @@
+@_14_paskaita_web_API_task_system_HostAddress = http://localhost:5194
+
+GET {{_14_paskaita_web_API_task_system_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

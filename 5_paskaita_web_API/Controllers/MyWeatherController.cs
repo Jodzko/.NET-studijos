@@ -35,7 +35,7 @@ namespace _5_paskaita_web_API.Controllers
                 {
                 if((DateTime.Now - existing.AddedTime).TotalMinutes > 30)
                 {
-                    Update(city);
+                    Update(city, weathersInDb);
                     return Ok(existing.AllData);
                     
                 }
@@ -59,10 +59,10 @@ namespace _5_paskaita_web_API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<WeatherApiResponse>> Update(string city)
+        public async Task<ActionResult<WeatherApiResponse>> Update(string city, IEnumerable<WeatherData> weathers)
         {
-            var dbInfo = _weatherService.GetWeathers();
-            var existingData = dbInfo.FirstOrDefault(x => x.City == city);
+            //var dbInfo = _weatherService.GetWeathers();
+            var existingData = weathers.FirstOrDefault(x => x.City == city);
             if (existingData != null)
             {
                 var result = await _weatherService.GetWeahterApiResponse(city);
