@@ -25,6 +25,27 @@ namespace _14_paskaita_web_API_task_system.Services
         {
             return _userJobDb.GetJobsInMemory();
         }
+        public Job GetJob(Guid id)
+        {
+            var job = _userJobDb.GetJobFromDictionary(id);
+            if(job == null)
+            {
+                job = _userJobDb.GetJobFromDb(id);
+            }
+            return job;
+        }
+        public IEnumerable<Job> GetJobsByStatus(string status)
+        {
+            var jobs = new List<Job>();
+            foreach (var item in _userJobDb.GetJobsInMemory())
+            {
+                if(item.Status == status)
+                {
+                    jobs.Add(item);
+                }
+            }
+            return jobs;
+        }
         public void ChangeJobStatus(Job job)
         {
             var jobToUpdate = _userJobDb.GetJobFromDictionary(job.Id);

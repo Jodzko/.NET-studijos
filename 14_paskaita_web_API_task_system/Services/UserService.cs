@@ -17,20 +17,23 @@ namespace _14_paskaita_web_API_task_system.Services
 
         public void AddUser(User user)
         {
-            var userInDb = _context.Users.FirstOrDefault(x => x.Id == user.Id);
             var userInMemory = _userJobDb.GetUsersInMemory().FirstOrDefault(x => x.Id == user.Id);
             if(userInMemory != null)
             {
                 throw new Exception("User is already in memory");
             }
-            else if(userInDb != null)
-            {
-                _userJobDb.AddUserToDictionary(user);
-                throw new Exception("User is already in the database, added to memory");
-            }
             else
             {
+                var userInDb = _context.Users.FirstOrDefault(x => x.Id == user.Id);
+                if(userInDb != null)
+                {
+                _userJobDb.AddUserToDictionary(user);
+                throw new Exception("User is already in the database, added to memory");
+                }
+                else
+                {
                 _userJobDb.AddUser(user);
+                }
             }
         }
         public IEnumerable<User> GetAllUsers()
