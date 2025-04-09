@@ -1,4 +1,5 @@
 
+using _14_paskaita_web_API_task_system.Models;
 using _14_paskaita_web_API_task_system.Persistence;
 using _14_paskaita_web_API_task_system.Services;
 using _14_paskaita_web_API_task_system.Services.Interfaces;
@@ -23,6 +24,7 @@ namespace _14_paskaita_web_API_task_system
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IJobService, JobService>();
             builder.Services.AddScoped<IUserJobDb, UserJobDb>();
+            builder.Services.AddSingleton<UserJobDictionary>();
             builder.Services.AddDbContext<UserJobDbContext>(options => options.UseSqlServer(connectionString));
 
             var app = builder.Build();

@@ -6,8 +6,13 @@ namespace _14_paskaita_web_API_task_system.Persistence
     {
         public IEnumerable<Job> GetAllJobs();
         public IEnumerable<Job> GetJobsInMemory();
-        public void AddJob(string name);
+        public void AddNewJob(string name);
+        public void AddExistingJobToDictionary(Job job);
+        public void UpdateJobStatus(Job job);
+        public Job GetJobFromDictionary(Guid id);
+        public Job GetJobFromDb(Guid id);
         public void AddUser(User user);
+        public void AddUserToDictionary(User user);
         public IEnumerable<User> GetUsersInMemory();
         public IEnumerable<User> GetAllUsers();
     }

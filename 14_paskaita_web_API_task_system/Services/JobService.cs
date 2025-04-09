@@ -13,9 +13,9 @@ namespace _14_paskaita_web_API_task_system.Services
             _userJobDb = userJobDb;
         }
 
-        public void AddJob(string name)
+        public void AddNewJob(string name)
         {
-            _userJobDb.AddJob(name);
+            _userJobDb.AddNewJob(name);
         }
         public IEnumerable<Job> GetJobs()
         {
@@ -24,6 +24,29 @@ namespace _14_paskaita_web_API_task_system.Services
         public IEnumerable<Job> GetJobsInRecentMemory()
         {
             return _userJobDb.GetJobsInMemory();
+        }
+        public void ChangeJobStatus(Job job)
+        {
+            var jobToUpdate = _userJobDb.GetJobFromDictionary(job.Id);
+            if(jobToUpdate == null)
+            {
+                jobToUpdate = _userJobDb.GetJobFromDb(job.Id);
+                if(jobToUpdate != null)
+                {
+                    jobToUpdate.Status = "In progress";
+                    _userJobDb.UpdateJobStatus(job);
+                }
+            }
+            else
+            {
+                _userJobDb.AddExistingJobToDictionary(jobToUpdate);
+                _userJobDb.UpdateJobStatus(jobToUpdate);
+            }
+
+        }
+        public void JobIsFinished(Job job)
+        {
+            _userJobDb.UpdateJobStatus(job);
         }
     }
 }
