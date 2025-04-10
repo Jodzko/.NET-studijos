@@ -6,100 +6,70 @@ namespace _14_paskaita_web_API_task_system.Services
 {
     public class JobService : IJobService
     {
-        private readonly IUserJobDb _userJobDb;
+        private readonly IJobRepository _jobRepo;
+        private readonly IUserRepository _userRepo;
 
-        public JobService(IUserJobDb userJobDb)
+        public JobService(IJobRepository jobRepo, IUserRepository userRepo)
         {
-            _userJobDb = userJobDb;
+            _jobRepo = jobRepo;
+            _userRepo = userRepo;
         }
 
         public void AddNewJob(string name)
         {
-            _userJobDb.AddNewJob(name);
+            _jobRepo.AddNewJob(name);
         }
         public IEnumerable<Job> GetJobs()
         {
-            return _userJobDb.GetAllJobs();
-        }
-        public IEnumerable<Job> GetJobsInRecentMemory()
-        {
-            return _userJobDb.GetJobsInMemory();
+            return _jobRepo.GetJobsInMemory();
         }
         public Job GetJob(Guid id)
         {
-            var job = _userJobDb.GetJobFromDictionary(id);
-            if(job == null)
-            {
-                job = _userJobDb.GetJobFromDb(id);
-            }
-            return job;
+            return _jobRepo.GetJobFromDictionary(id);
         }
         public IEnumerable<Job> GetJobsByStatus(string status)
         {
-            var jobs = _userJobDb.GetJobsInMemory();
-            if(jobs == null)
-            {
-
-            }
-            return _userJobDb.GetJobsInMemory();
+            return _jobRepo.GetJobsInMemory().Where(x => x.Status == status);
         }
         public void ChangeJobStatus(Job job)
         {
-            var jobToUpdate = _userJobDb.GetJobFromDictionary(job.Id);
-            if(jobToUpdate == null)
+            var jobToUpdate = _jobRepo.GetJobFromDictionary(job.Id);
+            if(jobToUpdate != null)
             {
-                jobToUpdate = _userJobDb.GetJobFromDb(job.Id);
-                if(jobToUpdate != null)
-                {
-                    jobToUpdate.Status = "In progress";
-                    _userJobDb.UpdateJobStatus(job);
-                }
+                jobToUpdate.Status = "In progress";
+                _jobRepo.UpdateJobStatus(job);
             }
-            else
-            {
-                _userJobDb.AddExistingJobToDictionary(jobToUpdate);
-                _userJobDb.UpdateJobStatus(jobToUpdate);
-            }
-
         }
         public void JobIsFinished(Job job)
         {
-            var jobToUpdate = _userJobDb.GetJobFromDictionary(job.Id);
-            if (jobToUpdate == null)
+            var jobToUpdate = _jobRepo.GetJobFromDictionary(job.Id);
+            if (jobToUpdate != null)
             {
-                jobToUpdate = _userJobDb.GetJobFromDb(job.Id);
-                if (jobToUpdate != null)
-                {
-                    jobToUpdate.Status = "Finished";
-                    _userJobDb.UpdateJobStatus(job);
-                }
-            }
-            else
-            {
-                _userJobDb.AddExistingJobToDictionary(jobToUpdate);
-                _userJobDb.UpdateJobStatus(jobToUpdate);
+                jobToUpdate.Status = "Finished";
+                _jobRepo.UpdateJobStatus(job);
             }
         }
         public void AssignUserToJob(Guid userId, Guid jobId)
         {
-            var job = _userJobDb.GetJobFromDictionary(jobId);
-            if(job == null)
-            {
-                job = _userJobDb.GetJobFromDb(jobId);
-            }
-            var user = _userJobDb.GetUserFromDictionary(userId);
-            if(user == null)
-            {
-                user = _userJobDb.GetUserFromDb(userId);
-            }
+            var job = _jobRepo.GetJobFromDictionary(jobId);
+            var user = _userRepo.GetUserFromDictionary(userId);
             if(job != null && user != null)
             {
-                _userJobDb.AddUserToJob(user, job);
-                if(job.Status != "Waiting")
+                _jobRepo.AddUserToJob(user, job);
+                if(job.Status != "In progress")
                 {
-                ChangeJobStatus(job);
+                    ChangeJobStatus(job);
                 }
             }
+            else if(job == null)
+            {
+                throw new Exception("There is no job in the database");
+            }
+            else if(user == null)
+            {
+                throw new Exception("There is no user in the database");
+            }
         }
+
     }
 }

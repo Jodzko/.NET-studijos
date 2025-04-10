@@ -1,4 +1,5 @@
-﻿using _14_paskaita_web_API_task_system.Models;
+﻿using _14_paskaita_web_API_task_system.Cache;
+using _14_paskaita_web_API_task_system.Models;
 using _14_paskaita_web_API_task_system.Persistence;
 using _14_paskaita_web_API_task_system.Requests;
 using _14_paskaita_web_API_task_system.Services;
@@ -13,23 +14,11 @@ namespace _14_paskaita_web_API_task_system.Controllers
     public class JobController : ControllerBase
     {
         private readonly IJobService _jobService;
-        private readonly UserJobDictionary _dictionary;
-        public JobController(IJobService jobService, UserJobDictionary dictionary)
+        public JobController(IJobService jobService)
         {
             _jobService = jobService;
-            _dictionary = dictionary;
         }
-        [HttpGet("RecentJobs")]
-        public IActionResult AllRecentJobs()
-        {
-            if(_dictionary.Jobs.Count() != 0)  
-                return Ok(_jobService.GetJobsInRecentMemory());
-            else
-            {
-                return NotFound("No recent jobs");
-            }
-        }
-        [HttpGet("AllJobs")]
+        [HttpGet("Jobs")]
         public IActionResult AllJobs()
         {
             return Ok(_jobService.GetJobs());
@@ -59,7 +48,7 @@ namespace _14_paskaita_web_API_task_system.Controllers
         {
             return Ok(_jobService.GetJobsByStatus(status));
         }
-        [HttpPut]
+        [HttpPut("AddUserToJob")]
         public IActionResult AssignUserToJob([FromQuery]Guid userId, [FromQuery]Guid jobId)
         {
             _jobService.AssignUserToJob(userId, jobId);
