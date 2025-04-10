@@ -20,10 +20,33 @@ namespace _14_paskaita_web_API_task_system.Persistence
         }
         public void AddNewJob(string name)
         {
-            var newEntry = new Job(name);
-            _dictionary.Jobs.Add(newEntry.Id, newEntry);
-            _context.Add(newEntry);
-            _context.SaveChanges();
+            var job = _dictionary.Jobs.FirstOrDefault(x => x.Value.Name == name).Value;
+            if(job == null)
+            {
+                job = _context.Jobs.FirstOrDefault(x => x.Name == name);
+                if(job == null)
+                {
+                    var newEntry = new Job(name);
+                    _dictionary.Jobs.Add(newEntry.Id, newEntry);
+                    _context.Add(newEntry);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception ("The job is already in the database");
+                }
+            }
+            else
+            {
+                throw new Exception ("The job is already in the dictionary");
+            }
+        }
+        public void AddJobsFromDictionaryToDb()
+        {
+            foreach (var item in _context.Jobs)
+            {
+                _dictionary.Jobs.Add(item.Id, item);
+            }
         }
         public void AddExistingJobToDictionary(Job job)
         {
@@ -61,11 +84,26 @@ namespace _14_paskaita_web_API_task_system.Persistence
             return _dictionary.Jobs.FirstOrDefault(x => x.Value.Id == id).Value;
 
         }
+        public User GetUserFromDictionary(Guid id)
+        {
+            return _dictionary.Users.FirstOrDefault(x => x.Value.Id == id).Value;
+        }
+        public User GetUserFromDb(Guid id)
+        {
+            return _context.Users.FirstOrDefault(x => x.Id == id);
+        }
         public void UpdateJobStatus(Job job)
         {
             var jobToUpdate = _context.Jobs.FirstOrDefault(x => x.Id == job.Id);
             _dictionary.Jobs.FirstOrDefault(x => x.Value.Id == job.Id).Value.Status = job.Status;
             _context.UpdateRange(jobToUpdate, job);
+            _context.SaveChanges();
+        }
+        public void AddUserToJob(User user, Job job)
+        {
+            var jobToUpdate = _dictionary.Jobs.FirstOrDefault(x => x.Value.Id == job.Id);
+            jobToUpdate.Value.Users.Add(user);
+            _context.Update(jobToUpdate);
             _context.SaveChanges();
         }
     }

@@ -36,15 +36,12 @@ namespace _14_paskaita_web_API_task_system.Services
         }
         public IEnumerable<Job> GetJobsByStatus(string status)
         {
-            var jobs = new List<Job>();
-            foreach (var item in _userJobDb.GetJobsInMemory())
+            var jobs = _userJobDb.GetJobsInMemory();
+            if(jobs == null)
             {
-                if(item.Status == status)
-                {
-                    jobs.Add(item);
-                }
+
             }
-            return jobs;
+            return _userJobDb.GetJobsInMemory();
         }
         public void ChangeJobStatus(Job job)
         {
@@ -67,7 +64,42 @@ namespace _14_paskaita_web_API_task_system.Services
         }
         public void JobIsFinished(Job job)
         {
-            _userJobDb.UpdateJobStatus(job);
+            var jobToUpdate = _userJobDb.GetJobFromDictionary(job.Id);
+            if (jobToUpdate == null)
+            {
+                jobToUpdate = _userJobDb.GetJobFromDb(job.Id);
+                if (jobToUpdate != null)
+                {
+                    jobToUpdate.Status = "Finished";
+                    _userJobDb.UpdateJobStatus(job);
+                }
+            }
+            else
+            {
+                _userJobDb.AddExistingJobToDictionary(jobToUpdate);
+                _userJobDb.UpdateJobStatus(jobToUpdate);
+            }
+        }
+        public void AssignUserToJob(Guid userId, Guid jobId)
+        {
+            var job = _userJobDb.GetJobFromDictionary(jobId);
+            if(job == null)
+            {
+                job = _userJobDb.GetJobFromDb(jobId);
+            }
+            var user = _userJobDb.GetUserFromDictionary(userId);
+            if(user == null)
+            {
+                user = _userJobDb.GetUserFromDb(userId);
+            }
+            if(job != null && user != null)
+            {
+                _userJobDb.AddUserToJob(user, job);
+                if(job.Status != "Waiting")
+                {
+                ChangeJobStatus(job);
+                }
+            }
         }
     }
 }

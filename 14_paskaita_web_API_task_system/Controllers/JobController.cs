@@ -47,10 +47,23 @@ namespace _14_paskaita_web_API_task_system.Controllers
             _jobService.ChangeJobStatus(job);
             return Ok();
         }
+        [HttpPut("JobIsFinished")]
+        public IActionResult JobIsFinished([FromForm]Guid id)
+        {
+            var job = _jobService.GetJob(id);
+            _jobService.JobIsFinished(job);
+            return Ok();
+        }
         [HttpGet("ByStatus")]
         public IActionResult GetJobsByStatus([FromQuery]string status)
         {
             return Ok(_jobService.GetJobsByStatus(status));
+        }
+        [HttpPut]
+        public IActionResult AssignUserToJob([FromQuery]Guid userId, [FromQuery]Guid jobId)
+        {
+            _jobService.AssignUserToJob(userId, jobId);
+            return Ok();
         }
     }
 }
