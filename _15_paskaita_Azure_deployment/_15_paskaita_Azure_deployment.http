@@ -1,0 +1,6 @@
+@_15_paskaita_Azure_deployment_HostAddress = http://localhost:5127
+
+GET {{_15_paskaita_Azure_deployment_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
