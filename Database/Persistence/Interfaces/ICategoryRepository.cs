@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace _web_api_project.Database.Persistence.Interfaces
 {
-    public interface INoteRepository
+    public interface ICategoryRepository
     {
-        public void AddNoteToDatabase(Note note);
-        public Note FindNoteInDatabase(Guid id);
+        public void AddCategoryToDatabase(Category category);
+        public Category FindCategoryInDatabase(string name);
+        public void DeleteCategory(string name);
+
 
     }
 }

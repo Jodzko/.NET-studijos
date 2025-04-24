@@ -1,4 +1,5 @@
-﻿using System;
+﻿using _web_api_project.Database.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,8 @@ namespace _web_api_project.Database.Persistence.Interfaces
 {
     public interface IAccountRepository
     {
+        public void AddAcountToDatabase(Account account);
+        public Account FindAccountInDatabase(string username);
+
     }
 }

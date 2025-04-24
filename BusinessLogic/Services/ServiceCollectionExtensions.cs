@@ -16,7 +16,8 @@ namespace _web_api_project.BusinessLogic.Services
         {
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<INotesService, NotesService>();
-            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IAccountService, AccountService>();            
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
             return services;
         }

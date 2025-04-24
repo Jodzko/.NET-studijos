@@ -16,7 +16,11 @@ namespace _web_api_project.Database
         {
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<INoteRepository, NoteRepository>();
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddDbContext<AppDbContext>(options => 
+            options.UseSqlServer(connectionString,
+                sqlOptions => sqlOptions.MigrationsAssembly("_web_api_project.Database")
+                ));
             return services;
         }
     }

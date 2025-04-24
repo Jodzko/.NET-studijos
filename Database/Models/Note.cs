@@ -9,9 +9,9 @@ namespace _web_api_project.Database.Models
     public class Note
     {
         public Guid Id { get; set; }
-        public string Category { get; set; }
         public string Body { get; set; }
         public Account Account { get; set; }
-        public Image? Image { get; set; }
+        public Category? Category { get; set; }
+        public byte[]? ImageData { get; set; }
     }
 }
