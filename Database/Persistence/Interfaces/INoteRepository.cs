@@ -11,6 +11,10 @@ namespace _web_api_project.Database.Persistence.Interfaces
     {
         public void AddNoteToDatabase(Note note);
         public Note FindNoteInDatabase(Guid id);
+        public void DeleteNote(Note note);
+        public void UpdateNote(Note note);
+        public List<Note> GetNotesByCategory(string name);
+
 
     }
 }

@@ -28,9 +28,15 @@ namespace _web_api_project.Database.Persistence
             return _context.Categories.FirstOrDefault(x => x.Name == name);
         }
 
-        public void DeleteCategory(string name)
+        public void DeleteCategory(Category category)
         {
-            throw new NotImplementedException();
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+        }
+        public void UpdateCategory(Category category)
+        {
+            _context.Update(category);
+            _context.SaveChanges();
         }
     }
 }

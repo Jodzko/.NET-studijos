@@ -27,5 +27,20 @@ namespace _web_api_project.Database.Persistence
         {
             return _context.Notes.FirstOrDefault(x => x.Id == id);
         }
+        public void DeleteNote(Note note)
+        {
+            _context.Notes.Remove(note);
+            _context.SaveChanges();
+        }
+
+        public void UpdateNote(Note note)
+        {
+            _context.Update(note);
+            _context.SaveChanges();
+        }
+        public List<Note> GetNotesByCategory(string name)
+        {
+            return _context.Notes.Where(x => x.Category.Name == name).ToList();
+        }
     }
 }

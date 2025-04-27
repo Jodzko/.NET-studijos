@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace _web_api_project.BusinessLogic.Contracts
 {
-    public record CreateCategoryRequest(string name);
+    public record CategoryRequest(string name);
 }

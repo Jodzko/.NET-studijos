@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 
 namespace _web_api_project.BusinessLogic.Contracts
 {
-    public record CreateNoteRequest(string body, string category, IFormFile? Image);
+    public record NoteRequest(string body, string category, IFormFile? Image);
 }
