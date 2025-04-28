@@ -14,8 +14,8 @@ namespace _web_api_project.BusinessLogic.Services.Interfaces
         public void CreateNote(string username, string body, string categoryName, IFormFile? image);
         public bool DeleteNote(string username, Guid noteId);
         public bool EditNote(string username, Guid noteId, string? body, string? categoryName, IFormFile? image);
-        public Note GetNote(Guid id);
-        public List<Note> GetByCategory(string name);
+        public NoteResponse GetNote(Guid id);
+        public List<NoteResponse> GetByCategory(string name);
 
     }
 }

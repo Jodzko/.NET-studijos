@@ -37,7 +37,7 @@ namespace _web_api_project.Api.Controllers
         }
         [Authorize]
         [HttpPut("EditNote")]
-        public IActionResult EditNote([FromQuery] Guid noteId, [FromBody] NoteRequest newNote)
+        public IActionResult EditNote([FromQuery] Guid noteId, [FromForm] NoteRequest newNote)
         {
             var usernameClaim = User.FindFirst(ClaimTypes.Name);
             if(usernameClaim == null)
@@ -75,7 +75,8 @@ namespace _web_api_project.Api.Controllers
         [HttpGet("GetNoteById")]
         public IActionResult GetNoteById([FromQuery] Guid id)
         {
-            return Ok(_notesService.GetNote(id));
+            var note = _notesService.GetNote(id);
+            return Ok(note);
         }
     }
 }

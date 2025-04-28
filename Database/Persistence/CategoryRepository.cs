@@ -38,5 +38,9 @@ namespace _web_api_project.Database.Persistence
             _context.Update(category);
             _context.SaveChanges();
         }
+        public Category FindAccountById(Guid id)
+        {
+            return _context.Categories.FirstOrDefault(x => x.Id == id);
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace _web_api_project.Database.Persistence.Interfaces
         public Category FindCategoryInDatabase(string name);
         public void DeleteCategory(Category category);
         public void UpdateCategory(Category category);
+        public Category FindAccountById(Guid id);
+
     }
 }

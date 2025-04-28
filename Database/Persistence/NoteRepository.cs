@@ -1,5 +1,6 @@
 ﻿using _web_api_project.Database.Models;
 using _web_api_project.Database.Persistence.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,16 @@ namespace _web_api_project.Database.Persistence
 
         public void AddNoteToDatabase(Note note)
         {
-            _context.Notes.Add(note);
             _context.SaveChanges();
         }
         
         public Note FindNoteInDatabase(Guid id)
         {
-            return _context.Notes.FirstOrDefault(x => x.Id == id);
+            var note = _context.Notes
+                .Include(n => n.Account)
+                .Include(n => n.Category).
+                FirstOrDefault(x => x.Id == id);
+            return note;
         }
         public void DeleteNote(Note note)
         {
@@ -40,7 +44,10 @@ namespace _web_api_project.Database.Persistence
         }
         public List<Note> GetNotesByCategory(string name)
         {
-            return _context.Notes.Where(x => x.Category.Name == name).ToList();
+            return _context.Notes.
+                Include(n => n.Category)
+                .Include(n => n.Account)
+                .Where(x => x.Category.Name == name).ToList();
         }
     }
 }

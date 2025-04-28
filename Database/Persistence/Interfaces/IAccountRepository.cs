@@ -11,6 +11,7 @@ namespace _web_api_project.Database.Persistence.Interfaces
     {
         public void AddAcountToDatabase(Account account);
         public Account FindAccountInDatabase(string username);
+        public Account FindAccountById(Guid id);
 
     }
 }

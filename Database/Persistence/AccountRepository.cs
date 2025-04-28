@@ -27,5 +27,9 @@ namespace _web_api_project.Database.Persistence
         {
             return _context.Accounts.FirstOrDefault(x => x.Username == username);
         }
+        public Account FindAccountById(Guid id)
+        {
+            return _context.Accounts.FirstOrDefault(x => x.Id == id);
+        }
     }
 }

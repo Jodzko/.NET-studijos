@@ -83,13 +83,35 @@ namespace _web_api_project.BusinessLogic.Services
             }
             return false;
         }
-        public Note GetNote(Guid id)
+        public NoteResponse GetNote(Guid noteId)
         {
-            return _noteRepository.FindNoteInDatabase(id);
+            var noteInDb = _noteRepository.FindNoteInDatabase(noteId);
+            var note = new NoteResponse
+            {
+                Id = noteInDb.Id,
+                AccountName = noteInDb.Account.Username,
+                CategoryName = noteInDb.Category.Name,
+                Body = noteInDb.Body
+            };
+            return note;
         }
-        public List<Note> GetByCategory(string name)
+        public List<NoteResponse> GetByCategory(string name)
         {
-            return _noteRepository.GetNotesByCategory(name);
+            var noteInDb = _noteRepository.GetNotesByCategory(name);
+            var listOfNotes = new List<NoteResponse>();
+            foreach (var item in noteInDb)
+            {
+                var note = new NoteResponse
+                {
+                    Id = item.Id,
+                    AccountName = item.Account.Username,
+                    CategoryName = item.Category.Name,
+                    Body = item.Body
+                };
+                listOfNotes.Add(note);
+            }
+            
+            return listOfNotes;
         }
     }
 }
